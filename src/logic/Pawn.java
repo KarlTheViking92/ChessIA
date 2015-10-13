@@ -32,7 +32,7 @@ public class Pawn extends Piece {
 		if(actualPos.Y == t && isPermitted(actualPos.X , actualPos.Y + (s*2), pos) && pos[actualPos.X][actualPos.Y + s ].occupied == -1)
 			permpos.add(new Position(actualPos.X, actualPos.Y + (s*2)));
 		
-		return null;
+		return permpos;
 	}
 	
 	private void isEnPassant(int z, Position pos[][]){
