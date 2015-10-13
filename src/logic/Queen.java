@@ -1,6 +1,7 @@
 package logic;
 
 import java.awt.Image;
+import java.util.ArrayList;
 
 public class Queen extends Piece {
 
@@ -9,7 +10,7 @@ public class Queen extends Piece {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Position[] permittedMoves(Position[][] pos) {
+	public ArrayList<Position> permittedMoves(Position[][] pos) {
 		// TODO Auto-generated method stub
 		return null;
 	}

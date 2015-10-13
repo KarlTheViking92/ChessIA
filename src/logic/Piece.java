@@ -50,6 +50,6 @@ public abstract class Piece {
 		return true;
 	}
 	
-	public abstract Position[] permittedMoves(Position pos[][]);
+	public abstract ArrayList<Position> permittedMoves(Position pos[][]);
 
 }
