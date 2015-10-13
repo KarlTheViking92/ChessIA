@@ -11,7 +11,7 @@ public abstract class Piece {
 	protected Position pos;
 	protected Image img;
 	protected String name;
-	protected int colour;
+	protected int colour; // -1 vuota 0 nero 1 bianco
 	protected int value;
 
 	public Piece(String name, Image img, int col, int val, Position pos ) {
