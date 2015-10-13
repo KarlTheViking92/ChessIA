@@ -15,18 +15,15 @@ public class Pawn extends Piece {
 
 	public Position[] permittedMoves(Position[][] pos) {
 		
+		i=0;
+		if(colour==1) {s=1;t=1;u=4;}
+		else {s=-1;t=6;u=3;}
+		
+		if(isPermitted(actualPos.X , actualPos.Y + s, pos) && pos[actualPos.X][actualPos.Y + s ].occupied != -1)
+			permpos.add(new Position(actualPos.X, actualPos.Y));
 		
 		return null;
 	}
 	
-	public static void main(String[] args) {
-		Piece p = new Pawn(null, 1, new Position(0, 0), null);
-		
-		p.permpos.add(new Position(1, 1));
-		
-		for (Position pos : p.permpos) {
-			System.out.println(pos.X);
-		}
-		System.out.println("finito");
-	}
+
 }
