@@ -9,7 +9,7 @@ public abstract class Piece {
 	protected boolean eaten;
 	protected boolean promoved;
 	
-	protected Position pos;
+	protected Position actualPos;
 	protected Image img;
 	protected String name;
 	protected int colour; // -1 vuota 0 nero 1 bianco
@@ -29,13 +29,13 @@ public abstract class Piece {
 	}
 	
 	public Position getPosition() {
-		return pos;
+		return actualPos;
 	}
 	
 	public void setPosition(Position p){
-		this.pos.X = p.X;
-		this.pos.Y = p.Y;
-		this.pos.occupied = colour;
+		this.actualPos.X = p.X;
+		this.actualPos.Y = p.Y;
+		this.actualPos.occupied = colour;
 	}
 	
 	public boolean isPermitted(int x, int y, Position pos[][]){
@@ -44,7 +44,7 @@ public abstract class Piece {
 			return false;
 		if(y < 0 || y > 7)
 			return false;
-		if (pos[x][y].occupied == this.pos.occupied)
+		if (pos[x][y].occupied == this.actualPos.occupied)
 			return false;
 		
 		return true;
