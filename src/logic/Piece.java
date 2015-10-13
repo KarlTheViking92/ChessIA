@@ -1,6 +1,7 @@
 package logic;
 
 import java.awt.Image;
+import java.util.ArrayList;
 
 public abstract class Piece {
 
@@ -13,6 +14,8 @@ public abstract class Piece {
 	protected String name;
 	protected int colour; // -1 vuota 0 nero 1 bianco
 	protected int value;
+	
+	public ArrayList<Position> permpos;
 
 	public Piece(String name, Image img, int col, int val, Position pos ) {
 		this.name = name;
@@ -22,6 +25,7 @@ public abstract class Piece {
 		this.moved = false;
 		this.eaten = false;
 		this.promoved = false;
+		this.permpos = new ArrayList<>();
 	}
 	
 	public Position getPosition() {
