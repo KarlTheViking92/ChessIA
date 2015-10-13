@@ -5,14 +5,45 @@ import java.util.ArrayList;
 
 public class Knight extends Piece {
 
-	public Knight(String name, Image img, int col, int val, Position pos) {
-		super(name, img, col, val, pos);
-		// TODO Auto-generated constructor stub
+	public Knight(Image img, int col, Position pos) {
+		super("knight", img, col, 3, pos);
+		
 	}
 
 	public ArrayList<Position> permittedMoves(Position[][] pos) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		if (isPermitted(actualPos.X+2, actualPos.Y+1, pos)) {
+			permpos.add(new Position(actualPos.X+2, actualPos.Y+1));
+		}
+		
+		if (isPermitted(actualPos.X+1, actualPos.Y+2, pos)) {
+			permpos.add(new Position(actualPos.X+1, actualPos.Y+2));
+		}
+		
+		if (isPermitted(actualPos.X-1, actualPos.Y+2, pos)) {
+			permpos.add(new Position(actualPos.X-1, actualPos.Y+2));
+		}
+		
+		if (isPermitted(actualPos.X-2, actualPos.Y+1, pos)) {
+			permpos.add(new Position(actualPos.X-2, actualPos.Y+1));
+		}
+		
+		if (isPermitted(actualPos.X-2, actualPos.Y-1, pos)) {
+			permpos.add(new Position(actualPos.X-2, actualPos.Y-1));
+		}
+		
+		if (isPermitted(actualPos.X-1, actualPos.Y-2, pos)) {
+			permpos.add(new Position(actualPos.X-1, actualPos.Y-2));
+		}
+		
+		if (isPermitted(actualPos.X+1, actualPos.Y-2, pos)) {
+			permpos.add(new Position(actualPos.X+1, actualPos.Y-2));
+		}
+		
+		if (isPermitted(actualPos.X+2, actualPos.Y-1, pos)) {
+			permpos.add(new Position(actualPos.X+2, actualPos.Y-1));
+		}
+		return permpos;
 	}
 
 }

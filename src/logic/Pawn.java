@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Pawn extends Piece {
 	
 	private Piece enemyPieces[];
-	private int i, s ,t, u;
+	private int s ,t, u;
 
 	public Pawn(Image img, int col, Position pos, Piece eP[]) {
 		super("pawn", img, col, 1 , pos);
@@ -16,7 +16,6 @@ public class Pawn extends Piece {
 
 	public ArrayList<Position> permittedMoves(Position[][] pos) {
 		
-		i=0;
 		if(colour==1) {s=1;t=1;u=4;}
 		else {s=-1;t=6;u=3;}
 		
@@ -31,6 +30,13 @@ public class Pawn extends Piece {
 		
 		if(actualPos.Y == t && isPermitted(actualPos.X , actualPos.Y + (s*2), pos) && pos[actualPos.X][actualPos.Y + s ].occupied == -1)
 			permpos.add(new Position(actualPos.X, actualPos.Y + (s*2)));
+		
+		if (actualPos.Y == u) {
+			isEnPassant(s, pos);
+			
+			isEnPassant(-s, pos);
+		}
+		
 		
 		return permpos;
 	}
