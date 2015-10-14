@@ -5,9 +5,8 @@ import java.util.ArrayList;
 
 public class Queen extends Piece {
 
-	public Queen(Image img, int col, int val, Position pos) {
+	public Queen(Image img, int col, Position pos) {
 		super("queen", img, col, 9, pos);
-	
 	}
 
 	public ArrayList<Position> permittedMoves(Position[][] pos) {

@@ -26,7 +26,11 @@ public abstract class Piece {
 		this.eaten = false;
 		this.promoved = false;
 		this.permpos = new ArrayList<>();
-		this.setPosition(pos);
+		//this.setPosition(pos);
+		
+		this.actualPos = pos;
+		this.actualPos.occupied = colour;
+		
 	}
 	
 	public Position getPosition() {
@@ -34,9 +38,14 @@ public abstract class Piece {
 	}
 	
 	public void setPosition(Position p){
-		this.actualPos.X = p.X;
-		this.actualPos.Y = p.Y;
-		this.actualPos.occupied = colour;
+		if(actualPos != null){
+			this.actualPos.X = p.X;
+			this.actualPos.Y = p.Y;
+			
+		}
+		else actualPos = new Position(p.X, p.Y);
+				
+		this.actualPos.occupied = this.colour;
 	}
 	
 	public boolean isPermitted(int x, int y, Position pos[][]){

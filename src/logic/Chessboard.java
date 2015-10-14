@@ -21,13 +21,25 @@ public class Chessboard {
 		}
 		// creazione Pedoni neri
 		for (int i = 0; i < 8; i++) {
+			
 			black.add(new Pawn(null, 0, chessboardPosition[1][i], white));
 		}
 		
-//		black.add()
+		black.add(new Rook(null, 0, chessboardPosition[0][0]));
+		black.add(new Rook(null, 0, chessboardPosition[0][7]));
+		black.add(new Knight(null, 0, chessboardPosition[0][1]));
+		black.add(new Knight(null, 0, chessboardPosition[0][6]));
+		black.add(new Bishop(null, 0, chessboardPosition[0][2]));
+		black.add(new Bishop(null, 0, chessboardPosition[0][5]));
+		black.add(new Queen(null, 0, chessboardPosition[0][3]));
+		black.add(new King(null, 0, chessboardPosition[0][4]));
 		
-
+		
+		
 	}
 	
+	public static void main(String[] args) {
+		Chessboard chess = new Chessboard();
+	}
 	
 }

@@ -5,9 +5,8 @@ import java.util.ArrayList;
 
 public class Rook extends Piece {
 
-	public Rook(Image img, int col, int val, Position pos) {
+	public Rook(Image img, int col, Position pos) {
 		super("rook", img, col, 5, pos);
-		// TODO Auto-generated constructor stub
 	}
 
 	public ArrayList<Position> permittedMoves(Position[][] pos) {
