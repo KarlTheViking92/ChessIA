@@ -2,13 +2,14 @@ package logic;
 
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Pawn extends Piece {
 	
-	private Piece enemyPieces[];
+	private ArrayList<Piece> enemyPieces;
 	private int s ,t, u;
 
-	public Pawn(Image img, int col, Position pos, Piece eP[]) {
+	public Pawn(Image img, int col, Position pos, ArrayList<Piece> eP) {
 		super("pawn", img, col, 1 , pos);
 		
 		this.enemyPieces = eP;
@@ -44,7 +45,7 @@ public class Pawn extends Piece {
 	private void isEnPassant(int z, Position pos[][]){
 		if (isPermitted(actualPos.X + z, actualPos.Y + s, pos)) {
 			for (int i = 0; i < 8; i++) {
-				if (!enemyPieces[i].eaten && !enemyPieces[i].promoved && enemyPieces[i].actualPos == pos[actualPos.X + z][actualPos.Y]) {
+				if (!enemyPieces.get(i).eaten && !enemyPieces.get(i).promoved && enemyPieces.get(i).actualPos == pos[actualPos.X + z][actualPos.Y]) {
 					permpos.add(new Position(actualPos.X + z, actualPos.Y + s));
 					break;
 				}

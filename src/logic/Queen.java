@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Queen extends Piece {
 
-	public Queen(String name, Image img, int col, int val, Position pos) {
+	public Queen(Image img, int col, int val, Position pos) {
 		super("queen", img, col, 9, pos);
 	
 	}

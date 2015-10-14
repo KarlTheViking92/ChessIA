@@ -26,6 +26,7 @@ public abstract class Piece {
 		this.eaten = false;
 		this.promoved = false;
 		this.permpos = new ArrayList<>();
+		this.setPosition(pos);
 	}
 	
 	public Position getPosition() {

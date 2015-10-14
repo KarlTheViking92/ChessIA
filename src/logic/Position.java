@@ -11,4 +11,18 @@ public class Position {
 		this.Y = y;
 	}
 	
+	@Override
+	public boolean equals(Object other) {
+		
+		Position tmp = (Position) other;
+		
+		if (this == tmp) return true;
+		
+		if(this.X == tmp.X && this.Y == tmp.Y ) return true;
+		
+		return false;
+	}
+	
+
+	
 }
