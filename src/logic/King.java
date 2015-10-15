@@ -30,7 +30,7 @@ public class King extends Piece {
 		}
 		//5 mossa
 		if(isPermitted(actualPos.X+1, actualPos.Y+1, pos)){
-			permpos.add(new Position(actualPos.X+1, actualPos.Y+11));
+			permpos.add(new Position(actualPos.X+1, actualPos.Y+1));
 		}
 		//6 mossa
 		if(isPermitted(actualPos.X-1, actualPos.Y-1, pos)){

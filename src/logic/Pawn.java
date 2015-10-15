@@ -19,20 +19,24 @@ public class Pawn extends Piece {
 
 	public ArrayList<Position> permittedMoves(Position[][] pos) {
 		
-		if(colour==1) {s=1;t=1;u=4;}
+		if(colour==0) {s=1;t=1;u=4;}
 		else {s=-1;t=6;u=3;}
 		
-		if(isPermitted(actualPos.X , actualPos.Y + s, pos) && pos[actualPos.X][actualPos.Y + s ].occupied == -1)
-			permpos.add(new Position(actualPos.X, actualPos.Y + s));
+		
+		if(isPermitted(actualPos.X  + s , actualPos.Y, pos) && pos[actualPos.X + s ][actualPos.Y ].occupied == -1)
+			permpos.add(new Position(actualPos.X + s, actualPos.Y ));
+			
 		
 		if(isPermitted(actualPos.X + s , actualPos.Y + s, pos) && pos[actualPos.X + s][actualPos.Y + s ].occupied != -1)
 			permpos.add(new Position(actualPos.X + s, actualPos.Y + s));
 		
-		if(isPermitted(actualPos.X - s , actualPos.Y + s, pos) && pos[actualPos.X - s ][actualPos.Y + s ].occupied != -1)
-			permpos.add(new Position(actualPos.X - s, actualPos.Y - s));
+		if(isPermitted(actualPos.X + s , actualPos.Y - s, pos) && pos[actualPos.X + s ][actualPos.Y - s ].occupied != -1)
+			permpos.add(new Position(actualPos.X + s, actualPos.Y - s));
 		
-		if(actualPos.Y == t && isPermitted(actualPos.X , actualPos.Y + (s*2), pos) && pos[actualPos.X][actualPos.Y + s ].occupied == -1)
-			permpos.add(new Position(actualPos.X, actualPos.Y + (s*2)));
+		if(actualPos.X == t && isPermitted(actualPos.X + s , actualPos.Y , pos) && pos[actualPos.X + s][actualPos.Y].occupied == -1){
+			if(isPermitted(actualPos.X + 2*s , actualPos.Y , pos) && pos[actualPos.X + 2*s][actualPos.Y].occupied == -1)
+				permpos.add(new Position(actualPos.X +2*s, actualPos.Y ));
+		}
 		
 		if (actualPos.Y == u) {
 			isEnPassant(s, pos);

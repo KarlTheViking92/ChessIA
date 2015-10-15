@@ -13,36 +13,37 @@ public class Bishop extends Piece {
 
 	public ArrayList<Position> permittedMoves(Position[][] pos) {
 		//1 direzione positiva 
-		int j = 0;
+		int j = 1;
 		while(isPermitted(actualPos.X+j, actualPos.Y+j, pos) && pos[actualPos.X+j][actualPos.Y+j].occupied == -1){
-			if(isPermitted(actualPos.X+j, actualPos.Y+j, pos)){
+			if(isPermitted(actualPos.X+j, actualPos.Y+j, pos))
 				permpos.add(new Position(actualPos.X+j, actualPos.Y+j));
-			}
+			
+			j++;
 		}
 			
 			//2 direzione 
-			while(isPermitted(actualPos.X+j, actualPos.Y+j, pos) && pos[actualPos.X+j][actualPos.Y+j].occupied == -1){
-				j = 0;
-				if(isPermitted(actualPos.X-j, actualPos.Y-j, pos)){
+		j = 1;
+			while(isPermitted(actualPos.X-j, actualPos.Y-j, pos) && pos[actualPos.X-j][actualPos.Y-j].occupied == -1){
+				if(isPermitted(actualPos.X-j, actualPos.Y-j, pos))
 					permpos.add(new Position(actualPos.X-j, actualPos.Y-j));
-					j++;
-				}
+					
+				j++;
 			}
 			//3 direzione 
-				while(isPermitted(actualPos.X+j, actualPos.Y+j, pos) && pos[actualPos.X+j][actualPos.Y+j].occupied == -1){
-					j = 0;
-					if(isPermitted(actualPos.X+j, actualPos.Y-j, pos)){
+			j = 1;
+				while(isPermitted(actualPos.X+j, actualPos.Y-j, pos) && pos[actualPos.X+j][actualPos.Y-j].occupied == -1){
+					if(isPermitted(actualPos.X+j, actualPos.Y-j, pos))
 						permpos.add(new Position(actualPos.X+j, actualPos.Y-j));
-						j++;
-					}
+						
+					j++;
 				}
 			//4 direzione
-				while(isPermitted(actualPos.X+j, actualPos.Y+j, pos) && pos[actualPos.X+j][actualPos.Y+j].occupied == -1){
-					j = 0;
-					if(isPermitted(actualPos.X-j, actualPos.Y+j, pos)){
+				j = 1;
+				while(isPermitted(actualPos.X-j, actualPos.Y+j, pos) && pos[actualPos.X-j][actualPos.Y+j].occupied == -1){
+					if(isPermitted(actualPos.X-j, actualPos.Y+j, pos))
 						permpos.add(new Position(actualPos.X-j, actualPos.Y+j));
-						j++;
-					}
+						
+					j++;
 				}
 				return permpos;
 	}
