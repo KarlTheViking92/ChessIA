@@ -20,10 +20,10 @@ public class Chessboard {
 			}
 		}
 		// creazione Pedoni neri
-		/*for (int i = 0; i < 8; i++) {
+		for (int i = 0; i < 8; i++) {
 			
 			black.add(new Pawn(null, 0, chessboardPosition[1][i], white));
-		}*/
+		}
 		
 		black.add(new Rook(null, 0, chessboardPosition[0][0]));
 		black.add(new Rook(null, 0, chessboardPosition[0][7]));
@@ -35,9 +35,9 @@ public class Chessboard {
 		black.add(new King(null, 0, chessboardPosition[0][4]));
 		
 		
-	/*	for (int i = 0; i < 8; i++) {
+		for (int i = 0; i < 8; i++) {
 			white.add(new Pawn(null, 1, chessboardPosition[6][i], black));
-		}*/
+		}
 		
 		
 		white.add(new Rook(null, 1, chessboardPosition[7][0]));
@@ -58,7 +58,7 @@ public class Chessboard {
 		Chessboard chess = new Chessboard();
 		ArrayList<Piece> white = chess.white;
 		ArrayList<Piece> black = chess.black;
-		
+/*		
 		for (Piece piece : black) {
 			System.out.println(piece.name + " "+ piece.actualPos.X +" "+ piece.actualPos.Y);
 			
@@ -67,7 +67,7 @@ public class Chessboard {
 			for (Position pos : mosse) {
 				System.out.println(pos.X + " "+ pos.Y);
 			}
-		}
+		}*/
 	}
 	
 	
