@@ -1,8 +1,10 @@
 package logic;
 
-import java.awt.Image;
+
 import java.util.ArrayList;
-import java.util.List;
+
+import javafx.scene.image.Image;
+
 
 public class Pawn extends Piece {
 	

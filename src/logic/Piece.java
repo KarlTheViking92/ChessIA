@@ -1,7 +1,9 @@
 package logic;
 
-import java.awt.Image;
+
 import java.util.ArrayList;
+
+import javafx.scene.image.Image;
 
 public abstract class Piece {
 

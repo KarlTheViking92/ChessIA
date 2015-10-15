@@ -34,7 +34,11 @@ public class Chessboard {
 		black.add(new Queen(null, 0, chessboardPosition[0][3]));
 		black.add(new King(null, 0, chessboardPosition[0][4]));
 		
+		for (int i = 0; i < 8; i++) {
+			white.add(new Pawn(null, 1, chessboardPosition[6][i], black));
+		}
 		
+		white.add(new Rook(null, 1, chessboardPosition[7][0]));
 		
 	}
 	
