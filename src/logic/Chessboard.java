@@ -52,6 +52,10 @@ public class Chessboard {
 	}
 	
 
+	public Position[][] getChessboard(){
+		
+		return chessboardPosition;
+	}
 	
 	
 	public static void main(String[] args) {
