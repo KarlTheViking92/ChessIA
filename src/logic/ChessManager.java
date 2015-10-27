@@ -11,9 +11,12 @@ public class ChessManager {
 		this.chessboard = new Chessboard();
 		this.history = new ArrayList<Gesture>();
 	}
+	public Chessboard getChessBoard(){
+		return chessboard;
+	}
 	
 	public boolean move(Piece p,Position newPos){
-		ArrayList<Position> position = p.permittedMoves(chessboard.getChessboard());
+		ArrayList<Position> position = p.permittedMoves(chessboard.getChessboardPosition());
 		for (Position pos : position) {
 			if(pos.equals(newPos)){
 				history.add(new Gesture(p, p.actualPos, newPos, p.colour));

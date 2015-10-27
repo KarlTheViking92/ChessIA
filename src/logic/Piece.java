@@ -63,5 +63,9 @@ public abstract class Piece {
 	}
 	
 	public abstract ArrayList<Position> permittedMoves(Position pos[][]);
+	
+	public Image getImage(){
+		return img;
+	}
 
 }

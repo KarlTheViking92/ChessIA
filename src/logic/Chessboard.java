@@ -54,9 +54,17 @@ public class Chessboard {
 	}
 	
 
-	public Position[][] getChessboard(){
+	public Position[][] getChessboardPosition(){
 		
 		return chessboardPosition;
+	}
+	
+	public ArrayList<Piece> getWhite(){
+		return white;
+	}
+	
+	public ArrayList<Piece> getBlack(){
+		return black;
 	}
 	
 	
