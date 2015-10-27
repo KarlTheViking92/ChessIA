@@ -2,6 +2,8 @@ package logic;
 
 import java.util.ArrayList;
 
+import javafx.scene.image.Image;
+
 public class Chessboard {
 
 	private ArrayList<Piece> white;
@@ -22,32 +24,32 @@ public class Chessboard {
 		// creazione Pedoni neri
 		for (int i = 0; i < 8; i++) {
 			
-			black.add(new Pawn(null, 0, chessboardPosition[1][i], white));
+			black.add(new Pawn(new Image("file:data/BlackPawn.png"), 0, chessboardPosition[1][i], white));
 		}
 		
-		black.add(new Rook(null, 0, chessboardPosition[0][0]));
-		black.add(new Rook(null, 0, chessboardPosition[0][7]));
-		black.add(new Knight(null, 0, chessboardPosition[0][1]));
-		black.add(new Knight(null, 0, chessboardPosition[0][6]));
-		black.add(new Bishop(null, 0, chessboardPosition[0][2]));
-		black.add(new Bishop(null, 0, chessboardPosition[0][5]));
-		black.add(new Queen(null, 0, chessboardPosition[0][3]));
-		black.add(new King(null, 0, chessboardPosition[0][4]));
+		black.add(new Rook(new Image("file:data/BlackRook.png"), 0, chessboardPosition[0][0]));
+		black.add(new Rook(new Image("file:data/BlackRook.png"), 0, chessboardPosition[0][7]));
+		black.add(new Knight(new Image("file:data/BlackKnight.png"), 0, chessboardPosition[0][1]));
+		black.add(new Knight(new Image("file:data/BlackKnight.png"), 0, chessboardPosition[0][6]));
+		black.add(new Bishop(new Image("file:data/BlackBishop.png"), 0, chessboardPosition[0][2]));
+		black.add(new Bishop(new Image("file:data/BlackBishop.png"), 0, chessboardPosition[0][5]));
+		black.add(new Queen(new Image("file:data/BlackQueen.png"), 0, chessboardPosition[0][3]));
+		black.add(new King(new Image("file:data/BlackKing.png"), 0, chessboardPosition[0][4]));
 		
 		
 		for (int i = 0; i < 8; i++) {
-			white.add(new Pawn(null, 1, chessboardPosition[6][i], black));
+			white.add(new Pawn(new Image("file:data/WhitePawn.png"), 1, chessboardPosition[6][i], black));
 		}
 		
 		
-		white.add(new Rook(null, 1, chessboardPosition[7][0]));
-		white.add(new Rook(null, 1, chessboardPosition[7][7]));
-		white.add(new Knight(null, 1, chessboardPosition[7][1]));
-		white.add(new Knight(null, 1, chessboardPosition[7][6]));
-		white.add(new Bishop(null, 1, chessboardPosition[7][2]));
-		white.add(new Bishop(null, 1, chessboardPosition[7][5]));
-		white.add(new Queen(null, 1, chessboardPosition[7][3]));
-		white.add(new King(null, 1, chessboardPosition[7][4]));
+		white.add(new Rook(new Image("file:data/WhiteRook.png"), 1, chessboardPosition[7][0]));
+		white.add(new Rook(new Image("file:data/WhiteRook.png"), 1, chessboardPosition[7][7]));
+		white.add(new Knight(new Image("file:data/WhiteKnight.png"), 1, chessboardPosition[7][1]));
+		white.add(new Knight(new Image("file:data/WhiteKnight.png"), 1, chessboardPosition[7][6]));
+		white.add(new Bishop(new Image("file:data/WhiteBishop.png"), 1, chessboardPosition[7][2]));
+		white.add(new Bishop(new Image("file:data/WhiteBishop.png"), 1, chessboardPosition[7][5]));
+		white.add(new Queen(new Image("file:data/WhiteQueen.png"), 1, chessboardPosition[7][3]));
+		white.add(new King(new Image("file:data/WhiteKing.png"), 1, chessboardPosition[7][4]));
 		
 	}
 	
