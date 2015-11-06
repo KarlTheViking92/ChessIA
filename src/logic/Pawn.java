@@ -60,6 +60,17 @@ public class Pawn extends Piece {
 		}
 		
 	}
-	
 
+
+	public ArrayList<Position> permittedMovesKing (Position pos [] []){
+		if(colour == 0)
+			s=1;
+		else 
+			s=-1;
+		if(isPermitted(actualPos.X+s, actualPos.Y+s, pos))
+			permpos.add(new Position(actualPos.X+s, actualPos.Y+s));
+		if(isPermitted(actualPos.X+s, actualPos.Y-s, pos))
+			permpos.add(new Position(actualPos.X+s,actualPos.Y-s));
+		return permpos;
+	}
 }
