@@ -8,7 +8,6 @@ public class ChessManager {
 
 	private Chessboard chessboard;
 	private ArrayList<Gesture> history;
-	
 	public int turn;
 	
 	public ChessManager() {
@@ -157,11 +156,34 @@ public class ChessManager {
 	}
 	
 	public void update(){
-		
+		ArrayList<Piece> enemyPlayer;
+		ArrayList<Piece> myPlayer;
+		String message;
+		if(turn == 0){
+			enemyPlayer = chessboard.getBlack();
+			myPlayer = chessboard.getWhite();
+		}
+		else{
+			enemyPlayer = chessboard.getWhite();
+			myPlayer = chessboard.getBlack();
+		}
+		if(turn == 0)
+			message = "Black";
+		else
+			message = "White";
+		for (Piece piece : enemyPlayer) {
+			if(piece instanceof King && !this.isPermitKing((King) piece, enemyPlayer)){
+				System.out.println("scacco al Re "+message);
+			
+				if(this.checkMate()){
+					System.out.println("Scacco matto");
+				}
+			}
+		}
 	}
 	
-	public boolean isPermitKing(King k, ArrayList<Piece> Enemy){
-		for (Piece piece : Enemy) {
+	public boolean isPermitKing(King k, ArrayList<Piece> enemy){
+		for (Piece piece : enemy) {
 			if(!piece.eaten && !piece.promoved){
 				ArrayList<Position> permitted = piece.permittedMoves(chessboard.getChessboardPosition());
 				for (Position position : permitted) {
