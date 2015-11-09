@@ -116,7 +116,7 @@ public class ChessManager {
 		}
 		
 		if(p.colour == 0){
-			if(p instanceof Pawn && !p.promoved && p.actualPos.X==0){
+			if(p instanceof Pawn && !p.promoved && p.actualPos.X==7){
 				p.promoved = true;
 				switch(s){
 				case "Queen" :
