@@ -11,7 +11,7 @@ public class King extends Piece {
 	}
 
 	public ArrayList<Position> permittedMoves(Position[][] pos) {
-
+		permpos.clear();
 		//1 mossa
 		if(isPermitted(actualPos.X+1, actualPos.Y, pos)){
 			permpos.add(new Position(actualPos.X+1, actualPos.Y));

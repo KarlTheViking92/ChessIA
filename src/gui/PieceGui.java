@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import logic.Piece;
@@ -11,7 +12,7 @@ import logic.Position;
 
 public class PieceGui extends Rectangle {
 	
-	Piece piece;
+	protected Piece piece;
 	
 	public PieceGui(Piece p) {	
 		this.piece = p;
@@ -21,21 +22,32 @@ public class PieceGui extends Rectangle {
 		this.setX(piece.getPosition().X);
 		this.setY(piece.getPosition().Y);
 		
-		this.setOnMouseReleased(new EventHandler<Event>() {
+		/*this.setOnDragDetected(new EventHandler<MouseEvent>() {
 
 			@Override
-			public void handle(Event arg0) {
-				System.out.println(this.getClass());
-				
+			public void handle(MouseEvent arg0) {
+				System.out.println("drag detected");
+				//System.out.println(arg0.getSceneX() + " " + arg0.getSceneY());
 				
 			}
-		});
+		});*/
 	}
 	
+	public Piece getLogicPiece(){
+		return piece;
+	}
 	
 	public ArrayList<Position> calculate( Position pos[][]){
 		return piece.permittedMoves(pos);
 	}
 	
+	public void changePos(Rectangle r){
+		piece.setPosition(new Position((int)r.getX(),(int) r.getY()));
+	}
+	public void updatePos(){
+		if(this.getX() != piece.getPosition().X && this.getY() != piece.getPosition().Y){
+			setX(piece.getPosition().X); setY(piece.getPosition().Y);
+		}
+	}
 
 }

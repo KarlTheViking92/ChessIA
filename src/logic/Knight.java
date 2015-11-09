@@ -12,6 +12,7 @@ public class Knight extends Piece {
 	}
 
 	public ArrayList<Position> permittedMoves(Position[][] pos) {
+		permpos.clear();
 		
 		if (isPermitted(actualPos.X+2, actualPos.Y+1, pos)) {
 			permpos.add(new Position(actualPos.X+2, actualPos.Y+1));

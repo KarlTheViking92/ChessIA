@@ -10,13 +10,13 @@ import logic.ChessManager;
 
 public class MainFrame extends Application {
 	
-	ChessManager manager;
+	static ChessManager manager;
 	ChessBoardGui gui;
 
 	@Override
 	public void start(Stage arg0) throws Exception {
 		manager = new ChessManager();
-		gui = new ChessBoardGui( manager.getChessBoard());
+		gui = new ChessBoardGui( manager );
 		
 		BorderPane main = new BorderPane();
 	    main.setCenter(gui);

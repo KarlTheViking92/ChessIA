@@ -12,6 +12,7 @@ public class Bishop extends Piece {
 	}
 
 	public ArrayList<Position> permittedMoves(Position[][] pos) {
+		permpos.clear();
 		//1 direzione positiva 
 		int j = 1;
 		while(isPermitted(actualPos.X+j, actualPos.Y+j, pos) && pos[actualPos.X+j][actualPos.Y+j].occupied == -1){

@@ -19,6 +19,8 @@ public class Pawn extends Piece {
 
 	public ArrayList<Position> permittedMoves(Position[][] pos) {
 		
+		permpos.clear();
+		
 		if(colour==0) {s=1;t=1;u=4;}
 		else {s=-1;t=6;u=3;}
 		

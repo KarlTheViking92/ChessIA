@@ -41,12 +41,12 @@ public abstract class Piece {
 	
 	public void setPosition(Position p){
 		if(actualPos != null){
-			this.actualPos.X = p.X;
-			this.actualPos.Y = p.Y;
+			actualPos = p;
 			
 		}
-		else actualPos = new Position(p.X, p.Y);
+		else {this.actualPos = new Position(p.X, p.Y);
 				
+		}
 		this.actualPos.occupied = this.colour;
 	}
 	

@@ -11,6 +11,7 @@ public class Rook extends Piece {
 	}
 
 	public ArrayList<Position> permittedMoves(Position[][] pos) {
+		permpos.clear();
 		int j = 1;
 		//1 direzione
 		while(isPermitted(actualPos.X+j, actualPos.Y, pos) && pos[actualPos.X+j][actualPos.Y].occupied == -1){
