@@ -2,6 +2,8 @@ package logic;
 
 import java.util.ArrayList;
 
+import javafx.scene.image.Image;
+
 public class ChessManager {
 
 	private Chessboard chessboard;
@@ -92,7 +94,46 @@ public class ChessManager {
 	}
 	
 	
-	public void promove(Piece p){
+	public void promove(Piece p, String s){
+		if(p.colour == 1){
+			if(p instanceof Pawn && !p.promoved && p.actualPos.X==0){
+				p.promoved = true;
+				switch(s){
+				case "Queen" :
+					Piece queen = new Queen(new Image("file:data/WhiteQueen.png"), 1, p.actualPos);
+					break;
+				case "Rook" :
+					Piece rook = new Rook(new Image("file:data/WhiteRook.png"),1,p.actualPos);
+					break;
+				case "Knight" : 
+					Piece knight = new Knight(new Image("file:data/WhiteKnight.png"),1,p.actualPos);
+					break;
+				case "Bishop" :
+					Piece bishop = new Bishop(new Image("file:data/WhiteBishop.png"), 1, p.actualPos);
+					break;
+				}
+			}
+		}
+		
+		if(p.colour == 0){
+			if(p instanceof Pawn && !p.promoved && p.actualPos.X==0){
+				p.promoved = true;
+				switch(s){
+				case "Queen" :
+					Piece queen = new Queen(new Image("file:data/BlackQueen.png"), 0, p.actualPos);
+					break;
+				case "Rook" :
+					Piece rook = new Rook(new Image("file:data/BlackRook.png"), 0,p.actualPos);
+					break;
+				case "Knight" : 
+					Piece knight = new Knight(new Image("file:data/BlackKnight.png"), 0,p.actualPos);
+					break;
+				case "Bishop" :
+					Piece bishop = new Bishop(new Image("file:data/BlackBishop.png"), 0, p.actualPos);
+					break;
+				}
+			}
+		}
 		
 	}
 	
@@ -120,6 +161,16 @@ public class ChessManager {
 	}
 	
 	public boolean isPermitKing(King k, ArrayList<Piece> Enemy){
+		for (Piece piece : Enemy) {
+			if(!piece.eaten && !piece.promoved){
+				ArrayList<Position> permitted = piece.permittedMoves(chessboard.getChessboardPosition());
+				for (Position position : permitted) {
+					if(position.equals(k.actualPos))
+						return true;
+				}
+			}
+		}
+		
 		return false;
 	}
 	
