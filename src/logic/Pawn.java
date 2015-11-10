@@ -40,7 +40,7 @@ public class Pawn extends Piece {
 				permpos.add(new Position(actualPos.X +2*s, actualPos.Y ));
 		}
 		
-		if (actualPos.Y == u) {
+		if (actualPos.X == u) {
 			isEnPassant(s, pos);
 			
 			isEnPassant(-s, pos);
@@ -51,10 +51,10 @@ public class Pawn extends Piece {
 	}
 	
 	private void isEnPassant(int z, Position pos[][]){
-		if (isPermitted(actualPos.X + z, actualPos.Y + s, pos)) {
+		if (isPermitted(actualPos.X + s, actualPos.Y + z, pos)) {
 			for (int i = 0; i < 8; i++) {
-				if (!enemyPieces.get(i).eaten && !enemyPieces.get(i).promoved && enemyPieces.get(i).actualPos == pos[actualPos.X + z][actualPos.Y]) {
-					permpos.add(new Position(actualPos.X + z, actualPos.Y + s));
+				if (!enemyPieces.get(i).eaten && !enemyPieces.get(i).promoved && enemyPieces.get(i).actualPos == pos[actualPos.X][actualPos.Y + z]) {
+					permpos.add(new Position(actualPos.X + s, actualPos.Y + z));
 					break;
 				}
 			}
