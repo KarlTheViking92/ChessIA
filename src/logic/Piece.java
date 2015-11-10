@@ -8,7 +8,7 @@ import javafx.scene.image.Image;
 public abstract class Piece {
 
 	protected boolean moved;
-	protected boolean eaten;
+	public boolean eaten;
 	protected boolean promoved;
 	
 	protected Position actualPos;

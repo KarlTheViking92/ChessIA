@@ -19,6 +19,9 @@ public class Rook extends Piece {
 				permpos.add(new Position(actualPos.X+j,actualPos.Y));
 			j++;
 		}
+		if(isPermitted(actualPos.X+j, actualPos.Y, pos) && pos[actualPos.X+j][actualPos.Y].occupied != this.colour )
+			permpos.add(new Position(actualPos.X+j,actualPos.Y));
+		
 		//2 direzione
 		j = 1;
 		while(isPermitted(actualPos.X, actualPos.Y+j, pos) && pos[actualPos.X][actualPos.Y+j].occupied == -1){
@@ -26,6 +29,8 @@ public class Rook extends Piece {
 				permpos.add(new Position(actualPos.X,actualPos.Y+j));
 			j++;
 		}
+		if(isPermitted(actualPos.X, actualPos.Y+j, pos) && pos[actualPos.X][actualPos.Y+j].occupied != this.colour)
+			permpos.add(new Position(actualPos.X,actualPos.Y+j));
 		
 		//3 direzione
 		j = 1;
@@ -35,6 +40,9 @@ public class Rook extends Piece {
 				
 			j++;
 		}
+		if(isPermitted(actualPos.X-j, actualPos.Y, pos) && pos[actualPos.X-j][actualPos.Y].occupied != this.colour)
+			permpos.add(new Position(actualPos.X-j,actualPos.Y));
+		
 		//4 direzione
 		j = 1;
 		while(isPermitted(actualPos.X, actualPos.Y-j, pos) && pos[actualPos.X][actualPos.Y-j].occupied == -1){
@@ -43,6 +51,9 @@ public class Rook extends Piece {
 			
 			j++;
 		}
+		if(isPermitted(actualPos.X, actualPos.Y-j, pos) && pos[actualPos.X][actualPos.Y-j].occupied != this.colour)
+			permpos.add(new Position(actualPos.X, actualPos.Y-j));
+		
 		return permpos;
 	}
 

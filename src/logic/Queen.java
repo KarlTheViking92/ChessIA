@@ -12,7 +12,7 @@ public class Queen extends Piece {
 
 	public ArrayList<Position> permittedMoves(Position[][] pos) {
 		permpos.clear();
-		int j = 0;
+		int j = 1;
 		//1 direzione
 				while(isPermitted(actualPos.X+j, actualPos.Y, pos) && pos[actualPos.X+j][actualPos.Y].occupied == -1){
 					if(isPermitted(actualPos.X+j, actualPos.Y, pos))

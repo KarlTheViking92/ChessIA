@@ -48,9 +48,7 @@ public class ChessBoardGui extends GridPane {
 	    
 	    for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
-				
-				//final StackPane stack = new StackPane();
-				
+								
 				final Rectangle rect = new Rectangle(i, j, 100, 100);
 
 				final CustomStackPane myStack = new CustomStackPane(rect);
@@ -60,28 +58,7 @@ public class ChessBoardGui extends GridPane {
 				else
 					rect.setFill(Color.web("#4c4c4c"));
 				
-			/*	stack.setOnMouseEntered(new EventHandler<Event>() {
 
-					@Override
-					public void handle(Event arg0) {
-						rect.setFill(Color.web("#fd482f"));
-						
-					}
-				});
-				
-				stack.setOnMouseExited(new EventHandler<Event>() {
-
-					public void handle(Event arg0) {
-						
-						if((( ((Rectangle)rect).getY() % 2) == 1 && (((Rectangle)rect).getX()%2) == 0) || ((((Rectangle)rect).getY() % 2) == 0 && (((Rectangle)rect).getX()%2) == 1))
-							rect.setFill(Color.web("#ffdab9"));		
-						else
-							rect.setFill(Color.web("#4c4c4c"));
-					}
-				});
-				
-				
-				stack.getChildren().add(rect);*/
 				Position piecePos = this.manager.getChessBoard().getChessboardPosition()[i][j];
 				
 				if(piecePos.occupied != -1){
@@ -114,8 +91,10 @@ public class ChessBoardGui extends GridPane {
 					public void handle(Event arg0) {
 						for (Node child : myStack.getChildren()) {
 							if(child instanceof PieceGui){
+								System.out.println(((PieceGui) child).getLogicPiece().getClass());
 								for (Position pos : ((PieceGui) child).calculate(manager.getChessBoard().getChessboardPosition())) {
 									Rectangle n = getNodeByRowColumnIndex(pos.X, pos.Y);
+									System.out.println(pos.X + " " + pos.Y);
 									n.setFill(Color.web("#0000FF"));
 									colored.add(n);
 								}
@@ -124,37 +103,7 @@ public class ChessBoardGui extends GridPane {
 						}
 						
 					}
-				});
-				
-
-				
-				
-			/*	stack.setOnDragDetected(new EventHandler<Event>() {
-
-					@Override
-					public void handle(Event arg0) {
-						
-						Dragboard db = ((Node) arg0.getTarget()).startDragAndDrop(TransferMode.ANY);
-						System.out.println("drag detected event");
-						ClipboardContent content = new ClipboardContent();
-						
-						System.out.println(arg0.getSource().getClass());
-						
-					//	content.put(new DataFormat("Piece"), arg0.getTarget());
-						db.setContent(content);
-					}
-				});
-				
-				
-				stack.setOnDragDone(new EventHandler<Event>() {
-
-					@Override
-					public void handle(Event arg0) {
-						System.out.println("drag done");
-						
-					}
-				});*/
-				
+				});				
 
 				myStack.setOnMouseReleased(new EventHandler<Event>() {
 
@@ -166,17 +115,10 @@ public class ChessBoardGui extends GridPane {
 									r.setFill(Color.web("#4c4c4c"));
 							}
 							colored.clear();
-							
-							
-							
-							//System.out.println(arg0.getTarget().getClass());
-							//System.out.println(getNodeByRowColumnIndex(row, column));
 						}
 				});
 				
-				this.add(myStack, j, i);
-				
-				
+				this.add(myStack, j, i);	
 			}
 		}
 	    setDragAndDrop();
@@ -230,15 +172,12 @@ public class ChessBoardGui extends GridPane {
 				@Override
 				public void handle(Event arg0) {
 					
-					//Dragboard db = ((Node) arg0.getTarget()).startDragAndDrop(TransferMode.ANY);
-					System.out.println("drag detected event");
-					System.out.println(arg0.getTarget().getClass());
 					drag = true;
-					DragPos = ((PieceGui)arg0.getTarget() ).getLogicPiece().getPosition();
+					if(arg0.getTarget() instanceof PieceGui)
+						DragPos = ((PieceGui)arg0.getTarget() ).getLogicPiece().getPosition();
 					startFullDrag();
 					
 					arg0.consume();
-				//	content.put(new DataFormat("Piece"), arg0.getTarget());
 				}
 			});
 			
@@ -247,33 +186,28 @@ public class ChessBoardGui extends GridPane {
 
 				@Override
 				public void handle(MouseDragEvent arg0) {
-					System.out.println("drag ended");
+					
 					Rectangle r = (Rectangle) arg0.getTarget();
 					CustomStackPane p = (CustomStackPane) arg0.getSource();
 					PieceGui toMove = getPieceByRowColumnIndex(DragPos.X, DragPos.Y);
-					if(manager.move(toMove.getLogicPiece(), manager.getChessBoard().getChessboardPosition()[(int) r.getX()][(int) r.getY()])){
+					
+					//System.out.println("la pos è occupata da: "+manager.getChessBoard().getChessboardPosition()[(int) r.getX()][(int) r.getY()].occupied);
+					
+					if(toMove != null && manager.move(toMove.getLogicPiece(), manager.getChessBoard().getChessboardPosition()[(int) r.getX()][(int) r.getY()])){
 						toMove.updatePos();
 						p.addPiece(toMove);
 						
 					}
-					//p.addPiece(getPieceByRowColumnIndex( (int)r.getX(),(int) r.getY()));
 					
-					for(int i = 0 ; i < 8 ; i++){
+					
+				/*	for(int i = 0 ; i < 8 ; i++){
 						for (int j = 0; j < 8; j++) {
 							System.out.print(manager.getChessBoard().getChessboardPosition()[i][j].occupied + " ");
 						}
 						System.out.println();
-					}
+					}*/
 				}
 			});
-			
-			/*if(tmp.getChildren().size() == 2){
-				System.out.println(tmp.getChildren().get(1).getClass());
-				Rectangle rect = (Rectangle) tmp.getChildren().get(0);
-				System.out.println(rect.getX() + "  " + rect.getY());
-				Piece p = ((PieceGui) tmp.getChildren().get(1)).getLogicPiece();
-				System.out.println(p.getClass());
-			}*/
 			
 		}
 	}
