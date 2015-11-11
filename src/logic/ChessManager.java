@@ -44,10 +44,10 @@ public class ChessManager {
 		}
 	}
 	
-	public void eat(Piece p1, Piece p2){
+	public boolean eat(Piece p1, Piece p2){
 		if(turn == p1.colour){
+			boolean hasEaten = false;
 			if(p1.colour != p2.colour && !(p2 instanceof King)){
-				boolean hasEaten = false;
 				if(move(p1,p2.actualPos)){
 					p2.eaten = true;
 					
@@ -75,9 +75,11 @@ public class ChessManager {
 				}
 			}
 			turn = p2.colour;
+			return hasEaten;
 		}
 		else{
-			System.out.println("non è il tuo turno");
+//			System.out.println("non è il tuo turno");
+			return false;
 		}
 	}
 	

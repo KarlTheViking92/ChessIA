@@ -34,11 +34,14 @@ public class ChessBoardGui extends GridPane {
 	boolean drag;
 	private Position DragPos;
 	ChessManager manager;
+	ArrayList<Piece> eaten;
 	
-	public ChessBoardGui(final ChessManager manager) {
+	public ChessBoardGui(final ChessManager manager , final EatenPieces eaten) {
 		
+		this.eaten = eaten.getList();
 		this.manager = manager;
 		this.colored = new ArrayList<>();
+		//this.eaten = new ArrayList<>();
 	    this.setAlignment(Pos.CENTER);
 	    this.setHgap(2);
 	    this.setVgap(2);
@@ -91,10 +94,10 @@ public class ChessBoardGui extends GridPane {
 					public void handle(Event arg0) {
 						for (Node child : myStack.getChildren()) {
 							if(child instanceof PieceGui){
-								System.out.println(((PieceGui) child).getLogicPiece().getClass());
+//								System.out.println(((PieceGui) child).getLogicPiece().getClass());
 								for (Position pos : ((PieceGui) child).calculate(manager.getChessBoard().getChessboardPosition())) {
 									Rectangle n = getNodeByRowColumnIndex(pos.X, pos.Y);
-									System.out.println(pos.X + " " + pos.Y);
+//									System.out.println(pos.X + " " + pos.Y);
 									n.setFill(Color.web("#0000FF"));
 									colored.add(n);
 								}
@@ -162,7 +165,7 @@ public class ChessBoardGui extends GridPane {
 	
 	private void setDragAndDrop(){
 		List<Node> children = this.getChildrenUnmodifiable();
-		System.out.println("size: " + children.size());
+		//System.out.println("size: " + children.size());
 		for (Node node : children) {
 			
 			StackPane tmp = (StackPane) node;
@@ -190,13 +193,38 @@ public class ChessBoardGui extends GridPane {
 					Rectangle r = (Rectangle) arg0.getTarget();
 					CustomStackPane p = (CustomStackPane) arg0.getSource();
 					PieceGui toMove = getPieceByRowColumnIndex(DragPos.X, DragPos.Y);
-					
+					System.out.println("customStack ha size "+ p.getChildren().size());
 					//System.out.println("la pos è occupata da: "+manager.getChessBoard().getChessboardPosition()[(int) r.getX()][(int) r.getY()].occupied);
 					
 					if(toMove != null && manager.move(toMove.getLogicPiece(), manager.getChessBoard().getChessboardPosition()[(int) r.getX()][(int) r.getY()])){
 						toMove.updatePos();
 						p.addPiece(toMove);
 						
+						/*if(toMove.getLogicPiece() instanceof Pawn){
+							PieceGui enPassant = null;
+							if(checkPos(toMove.getLogicPiece().getPosition().X, toMove.getLogicPiece().getPosition().Y-1) && getPieceByRowColumnIndex(toMove.getLogicPiece().getPosition().X, toMove.getLogicPiece().getPosition().Y-1).getLogicPiece() instanceof Pawn)
+								enPassant = getPieceByRowColumnIndex(toMove.getLogicPiece().getPosition().X, toMove.getLogicPiece().getPosition().Y-1);
+							else if(checkPos(toMove.getLogicPiece().getPosition().X, toMove.getLogicPiece().getPosition().Y+1) && getPieceByRowColumnIndex(toMove.getLogicPiece().getPosition().X, toMove.getLogicPiece().getPosition().Y+1).getLogicPiece() instanceof Pawn)
+								enPassant = getPieceByRowColumnIndex(toMove.getLogicPiece().getPosition().X, toMove.getLogicPiece().getPosition().Y+1);
+							
+							if(toMove != null && enPassant != null && manager.eat(toMove.getLogicPiece(), enPassant.getLogicPiece())){
+								System.out.println(enPassant.getClass());
+								
+								eaten.add(enPassant.getLogicPiece());
+								p.getChildren().remove(enPassant);
+								p.addPiece(toMove);
+							}
+						}*/
+					}
+					else if(p.getChildren().size() == 2){
+						PieceGui toEat = (PieceGui) p.getChildren().get(1);
+						
+						if(toMove != null && manager.eat(toMove.getLogicPiece(), toEat.getLogicPiece())){
+							
+							eaten.add(toEat.getLogicPiece());
+							p.getChildren().remove(toEat);
+							p.addPiece(toMove);
+						}
 					}
 					
 					
@@ -212,6 +240,13 @@ public class ChessBoardGui extends GridPane {
 		}
 	}
 	
-	
+	boolean checkPos(int x, int y){
+		if(x > 7 || x < 0)
+			return false;
+		if(y > 7 || y < 0)
+			return false;
+		
+		return true;
+	}
 
 }

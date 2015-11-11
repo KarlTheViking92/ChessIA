@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
 import logic.Piece;
 
 public class EatenPieces extends FlowPane {
@@ -11,7 +13,7 @@ public class EatenPieces extends FlowPane {
 	ArrayList<Piece> eaten;
 	
 	public EatenPieces() {
-		// TODO Auto-generated constructor stub
+		this.eaten = new ArrayList<>();
 	}
 	
 	public void addEaten(Piece p){
@@ -20,9 +22,15 @@ public class EatenPieces extends FlowPane {
 	}
 	
 	public void draw(){
+		this.getChildren().clear();
 		for (Piece piece : eaten) {
-			this.getChildren().add(new ImageView(piece.getImage()));
+			Rectangle r = new Rectangle(70,70);
+			r.setFill(new ImagePattern(piece.getImage()));
+			this.getChildren().add(r);
 		}
+	}
+	public ArrayList<Piece> getList(){
+		return eaten;
 	}
 	
 }
