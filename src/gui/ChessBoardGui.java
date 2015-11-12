@@ -31,7 +31,7 @@ import logic.Position;
 public class ChessBoardGui extends GridPane {
 
 	List<Rectangle> colored;
-	boolean drag;
+//	boolean drag;
 	private Position DragPos;
 	ChessManager manager;
 	ArrayList<Piece> eaten;
@@ -48,7 +48,7 @@ public class ChessBoardGui extends GridPane {
 	    this.setVgap(2);
 	    this.setPadding(new Insets(25));
 	    this.setGridLinesVisible(false);
-	    this.drag = false;
+//	    this.drag = false;
 	    
 	    for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
@@ -95,10 +95,8 @@ public class ChessBoardGui extends GridPane {
 					public void handle(Event arg0) {
 						for (Node child : myStack.getChildren()) {
 							if(child instanceof PieceGui){
-//								System.out.println(((PieceGui) child).getLogicPiece().getClass());
 								for (Position pos : ((PieceGui) child).calculate(manager.getChessBoard().getChessboardPosition())) {
 									Rectangle n = getNodeByRowColumnIndex(pos.X, pos.Y);
-//									System.out.println(pos.X + " " + pos.Y);
 									n.setFill(Color.web("#0000FF"));
 									colored.add(n);
 								}
@@ -165,9 +163,21 @@ public class ChessBoardGui extends GridPane {
         return null;
     }
 	
+	public StackPane getStackByRowColumnIndex(final int row,final int column) {
+        Node result = null;
+        ObservableList<Node> childrens = this.getChildren();
+        for(Node node : childrens) {
+            if(this.getRowIndex(node) == row && this.getColumnIndex(node) == column) {
+                result = node;
+                break;
+            }
+        }
+        
+        return (StackPane) result;
+    }
+	
 	private void setDragAndDrop(){
 		List<Node> children = this.getChildrenUnmodifiable();
-		//System.out.println("size: " + children.size());
 		for (Node node : children) {
 			
 			StackPane tmp = (StackPane) node;
@@ -177,7 +187,7 @@ public class ChessBoardGui extends GridPane {
 				@Override
 				public void handle(Event arg0) {
 					
-					drag = true;
+//					drag = true;
 					if(arg0.getTarget() instanceof PieceGui && ((PieceGui)arg0.getTarget() ).getLogicPiece().getPosition().occupied == manager.turn){
 						DragPos = ((PieceGui)arg0.getTarget() ).getLogicPiece().getPosition();
 						PieceGui tmp = (PieceGui)arg0.getTarget();
@@ -215,51 +225,35 @@ public class ChessBoardGui extends GridPane {
 					Rectangle r = (Rectangle) arg0.getTarget();
 					CustomStackPane p = (CustomStackPane) arg0.getSource();
 					PieceGui toMove = getPieceByRowColumnIndex(DragPos.X, DragPos.Y);
-//					System.out.println("customStack ha size "+ p.getChildren().size());
-					//System.out.println("la pos è occupata da: "+manager.getChessBoard().getChessboardPosition()[(int) r.getX()][(int) r.getY()].occupied);
 					
-					if(toMove != null && manager.move(toMove.getLogicPiece(), manager.getChessBoard().getChessboardPosition()[(int) r.getX()][(int) r.getY()])){
-						toMove.updatePos();
-						p.addPiece(toMove);
+					if(toMove != null && p.getChildren().size() == 1){
+						if(manager.move(toMove.getLogicPiece(), manager.getChessBoard().getChessboardPosition()[(int) r.getX()][(int) r.getY()]))
+							toMove.updatePos();
+							p.addPiece(toMove);
 						
-						if(toMove != null && toMove.getLogicPiece() instanceof Pawn){
-							
-							//Piece go = getPieceByRowColumnIndex(toMove.getLogicPiece().getPosition().X, toMove.getLogicPiece().getPosition().Y-1).getLogicPiece();
-
-							System.out.println("prima di mangiare");
-//							System.out.println(toMove.getClass());
+						if(toMove != null && toMove.getLogicPiece() instanceof Pawn ){
 							if(enPassant != null && manager.eat(toMove.getLogicPiece(), enPassant.getLogicPiece())){
-								
-								System.out.println("entro bene");
 								eaten.add(enPassant.getLogicPiece());
-								p.getChildren().remove(enPassant);
+								CustomStackPane st = (CustomStackPane) getStackByRowColumnIndex(enPassant.getLogicPiece().getPosition().X, enPassant.getLogicPiece().getPosition().Y);
+								st.getChildren().remove(enPassant);
 								p.addPiece(toMove);
 							}
-							System.out.println("dopo");
 						}
 						changeTurn();
 
 					}
 					else if(p.getChildren().size() == 2){
 						PieceGui toEat = (PieceGui) p.getChildren().get(1);
-						
+						System.out.println("entro per mangiare");
 						if(toMove != null && manager.eat(toMove.getLogicPiece(), toEat.getLogicPiece())){
 							
 							eaten.add(toEat.getLogicPiece());
 							p.getChildren().remove(toEat);
 							p.addPiece(toMove);
+							System.out.println("ti mangio, ti mangio");
 							changeTurn();
 						}
 					}
-
-					
-					
-				/*	for(int i = 0 ; i < 8 ; i++){
-						for (int j = 0; j < 8; j++) {
-							System.out.print(manager.getChessBoard().getChessboardPosition()[i][j].occupied + " ");
-						}
-						System.out.println();
-					}*/
 				}
 			});
 			

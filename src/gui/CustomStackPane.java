@@ -51,7 +51,8 @@ public class CustomStackPane extends StackPane {
 
 	public void addPiece(PieceGui p){
 		this.piece = p ;
-		this.getChildren().add(piece);
+		if(!this.getChildren().contains(piece))
+			this.getChildren().add(piece);
 	}
 	
 }

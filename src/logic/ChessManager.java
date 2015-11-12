@@ -48,42 +48,43 @@ public class ChessManager {
 	}
 	
 	public boolean eat(Piece p1, Piece p2){
+		
 		System.out.println("entro in eat e il turno è "+ turn);
+		boolean hasEaten = false;
+		
 		if(turn == p1.colour){
-			boolean hasEaten = false;
 			if(p1.colour != p2.colour && !(p2 instanceof King)){
+				
 				if(move(p1,p2.actualPos)){
 					p2.eaten = true;
 					hasEaten = true;
 				}
-				System.out.println(p1.getClass() + "   "+ p2.getClass());
+//				System.out.println(p1.getClass() + "   "+ p2.getClass());
 				if((p1 instanceof Pawn) && (p2 instanceof Pawn)){
 					System.out.println("entro nella parte dei pedoni");
 					int s = 1;
 					if(p1.colour == 1)
 						s = -1;
-					System.out.println("p1 :   "+p1.getPosition().X + "  "+ p1.getPosition().Y);
-					System.out.println("p2 :   "+p2.getPosition().X + "  "+ p2.getPosition().Y);
-					System.out.println("s:  " + s);
+//					System.out.println("p1 :   "+p1.getPosition().X + "  "+ p1.getPosition().Y);
+//					System.out.println("p2 :   "+p2.getPosition().X + "  "+ p2.getPosition().Y);
+//					System.out.println("s:  " + s);
 					if ( !hasEaten && ((p1.getPosition().X - s == p2.getPosition().X  && p1.getPosition().Y == p2.getPosition().Y ) || (p1.getPosition().X+ s == p2.getPosition().X && p1.getPosition().Y - s == p2.getPosition().Y ))) {
 						System.out.println("entro nell'if dove devo entrare");
 						if(!history.isEmpty()){
 							
-							System.out.println(" history size: "+history.size());
+//							System.out.println(" history size: "+history.size());
 							Gesture last = history.get(history.size()-3);
 							//System.out.println("last turno "+last.getTurn() + " nome:  " + last.getPiece().name+ " startingPos  " + last.getStartingPosition().X + " " + last.getStartingPosition().Y);
 							//System.out.println("final pos: "+ last.getFinalPosition().X + "   " + last.getFinalPosition().Y);
 							Position tmp = last.getFinalPosition();
-							
-							
-							System.out.println("p1 pos "+(p1.getPosition().X -s)+" "+ (p1.getPosition().Y +s));
-							System.out.println("tmp "+ (tmp.X) + " " + (tmp.Y));
 							if ( !tmp.equals(new Position(p1.getPosition().X -s , p1.getPosition().Y+s)) ){
-								//throw new RuntimeException("Mossa Non Valida");
+								throw new RuntimeException("Mossa Non Valida");
 							}
 							else{
 								System.out.println("mangio bene");
+								//hasEaten = true;
 								p2.eaten = true;
+								hasEaten = true;
 							}
 						}
 					}
@@ -93,7 +94,7 @@ public class ChessManager {
 			return hasEaten;
 		}
 		else{
-			System.out.println("non è il tuo turno");
+			System.out.println("mangio e non è il mio turno");
 			return false;
 		}
 	}

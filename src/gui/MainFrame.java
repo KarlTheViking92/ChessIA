@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.beans.InvalidationListener;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -41,35 +42,26 @@ public class MainFrame extends Application {
 		//BorderPane main = new BorderPane();
 		
 		GridPane grid = new GridPane();
+		GridPane grid2 = new GridPane();
+		Label labbel = new Label("PEZZI MANGIATI");
+		GridPane.setHalignment(labbel, HPos.CENTER);
+
 		grid.add(flow, 0, 0);
 		grid.add(gui, 1, 0);
-		grid.add(eaten , 2 , 0);
+		
+		grid2.add(labbel, 0, 0);
+		grid2.add(eaten , 0 , 1);
+		
+		grid.add(grid2, 2, 0);
+		
 	    grid.setAlignment(Pos.CENTER);
 	    grid.setHgap(2);
 	    grid.setVgap(2);
 	    grid.setPadding(new Insets(25));
 	    grid.setGridLinesVisible(false);
 	    
-	    /*main.setCenter(gui);
-	    main.setLeft(flow);
-	    /*main.getLeft().minHeight(85.00);
-	    main.getLeft().minWidth(85.00);
-	    main.getLeft().maxHeight(85.00);
-	    main.getLeft().maxWidth(85.00);*/
-	/*    
-	    main.setRight(eaten);
-	    eaten.setOrientation(Orientation.VERTICAL);
-	   /* main.getRight().minHeight(85.00);
-	    main.getRight().minWidth(85.00);
-	    main.getRight().maxHeight(85.00);
-	    main.getRight().maxWidth(85.00);*/
-	    
-	    //main.getRight().minHeight(100.00);
-	   /* main.getCenter().getStyleClass().add("center");
-	    main.getCenter().minHeight(800.00);
-	    main.getCenter().minWidth(800.00);*/
+
 	    Rectangle2D screen = Screen.getPrimary().getVisualBounds();
-	    //System.out.println(screen.getHeight() - 60.00);
 	    arg0.setScene(new Scene(grid, screen.getWidth() - 60.00, screen.getHeight() -60.00));
 	    
 	    new AnimationTimer() {
