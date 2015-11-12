@@ -10,6 +10,8 @@ public class ChessManager {
 	private ArrayList<Gesture> history;
 	public int turn;
 	
+	int t = 0;
+	
 	public ChessManager() {
 		this.chessboard = new Chessboard();
 		this.history = new ArrayList<Gesture>();
@@ -28,11 +30,12 @@ public class ChessManager {
 					p.actualPos.occupied = -1;
 					p.setPosition(newPos);
 					
-					if(turn == 1)
+				/*	if(turn == 1)
 						turn = 0;
 					else
 						turn = 1;
-					
+					t++;
+					System.out.println("cambio il turno: " + t);*/
 					return true;
 				}
 			}
@@ -45,40 +48,52 @@ public class ChessManager {
 	}
 	
 	public boolean eat(Piece p1, Piece p2){
+		System.out.println("entro in eat e il turno è "+ turn);
 		if(turn == p1.colour){
 			boolean hasEaten = false;
 			if(p1.colour != p2.colour && !(p2 instanceof King)){
 				if(move(p1,p2.actualPos)){
 					p2.eaten = true;
-					
 					hasEaten = true;
 				}
+				System.out.println(p1.getClass() + "   "+ p2.getClass());
 				if((p1 instanceof Pawn) && (p2 instanceof Pawn)){
+					System.out.println("entro nella parte dei pedoni");
 					int s = 1;
 					if(p1.colour == 1)
 						s = -1;
-					
-					if ( !hasEaten && (p1.getPosition().X == p2.getPosition().X && p1.getPosition().Y == p2.getPosition().Y - s) || (p1.getPosition().X == p2.getPosition().X && p1.getPosition().Y == p2.getPosition().Y + s)) {
-					
+					System.out.println("p1 :   "+p1.getPosition().X + "  "+ p1.getPosition().Y);
+					System.out.println("p2 :   "+p2.getPosition().X + "  "+ p2.getPosition().Y);
+					System.out.println("s:  " + s);
+					if ( !hasEaten && ((p1.getPosition().X - s == p2.getPosition().X  && p1.getPosition().Y == p2.getPosition().Y ) || (p1.getPosition().X+ s == p2.getPosition().X && p1.getPosition().Y - s == p2.getPosition().Y ))) {
+						System.out.println("entro nell'if dove devo entrare");
 						if(!history.isEmpty()){
-							Gesture last = history.get(history.size()-1);
-							Position tmp = last.getStartingPosition();
-							if ( !p1.getPosition().equals(new Position(tmp.X - s, tmp.Y)) ){
-								throw new RuntimeException("Mossa Non Valida");
+							
+							System.out.println(" history size: "+history.size());
+							Gesture last = history.get(history.size()-3);
+							//System.out.println("last turno "+last.getTurn() + " nome:  " + last.getPiece().name+ " startingPos  " + last.getStartingPosition().X + " " + last.getStartingPosition().Y);
+							//System.out.println("final pos: "+ last.getFinalPosition().X + "   " + last.getFinalPosition().Y);
+							Position tmp = last.getFinalPosition();
+							
+							
+							System.out.println("p1 pos "+(p1.getPosition().X -s)+" "+ (p1.getPosition().Y +s));
+							System.out.println("tmp "+ (tmp.X) + " " + (tmp.Y));
+							if ( !tmp.equals(new Position(p1.getPosition().X -s , p1.getPosition().Y+s)) ){
+								//throw new RuntimeException("Mossa Non Valida");
 							}
 							else{
-								move(p1, new Position(p2.getPosition().X - s, p2.getPosition().Y));
+								System.out.println("mangio bene");
 								p2.eaten = true;
 							}
 						}
 					}
 				}
 			}
-			turn = p2.colour;
+//			turn = p2.colour;
 			return hasEaten;
 		}
 		else{
-//			System.out.println("non è il tuo turno");
+			System.out.println("non è il tuo turno");
 			return false;
 		}
 	}

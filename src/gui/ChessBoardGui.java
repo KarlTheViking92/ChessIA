@@ -35,6 +35,7 @@ public class ChessBoardGui extends GridPane {
 	private Position DragPos;
 	ChessManager manager;
 	ArrayList<Piece> eaten;
+	PieceGui enPassant;
 	
 	public ChessBoardGui(final ChessManager manager , final EatenPieces eaten) {
 		
@@ -158,8 +159,9 @@ public class ChessBoardGui extends GridPane {
         
         for (Node node : ((StackPane) result).getChildren()) {
 			if(node instanceof PieceGui)
-				 return (PieceGui) node;
+				return (PieceGui) node;
 		}
+        
         return null;
     }
 	
@@ -176,9 +178,29 @@ public class ChessBoardGui extends GridPane {
 				public void handle(Event arg0) {
 					
 					drag = true;
-					if(arg0.getTarget() instanceof PieceGui)
+					if(arg0.getTarget() instanceof PieceGui && ((PieceGui)arg0.getTarget() ).getLogicPiece().getPosition().occupied == manager.turn){
 						DragPos = ((PieceGui)arg0.getTarget() ).getLogicPiece().getPosition();
-					startFullDrag();
+						PieceGui tmp = (PieceGui)arg0.getTarget();
+						
+						if(tmp.getLogicPiece() instanceof Pawn){
+							if(checkPos(tmp.getLogicPiece().getPosition().X, tmp.getLogicPiece().getPosition().Y-1)){
+								PieceGui p = getPieceByRowColumnIndex(tmp.getLogicPiece().getPosition().X, tmp.getLogicPiece().getPosition().Y-1);
+								if( p != null &&  p.getLogicPiece().getPosition().occupied != manager.turn){
+									enPassant = p;
+									System.out.println("inizializzo enpassant");
+								}
+							}
+							if(checkPos(tmp.getLogicPiece().getPosition().X, tmp.getLogicPiece().getPosition().Y+1) ){
+								PieceGui p = getPieceByRowColumnIndex(tmp.getLogicPiece().getPosition().X, tmp.getLogicPiece().getPosition().Y+1);
+									if(p != null && p.getLogicPiece().getPosition().occupied != manager.turn){
+										enPassant = p;
+										System.out.println("enpassant inizializato con pos "+ enPassant.getLogicPiece().getPosition().X + " "+enPassant.getLogicPiece().getPosition().Y);
+									}
+							}
+						}
+						
+						startFullDrag();
+					}
 					
 					arg0.consume();
 				}
@@ -189,32 +211,34 @@ public class ChessBoardGui extends GridPane {
 
 				@Override
 				public void handle(MouseDragEvent arg0) {
-					
+					System.out.println("tocca a : " +manager.turn);
 					Rectangle r = (Rectangle) arg0.getTarget();
 					CustomStackPane p = (CustomStackPane) arg0.getSource();
 					PieceGui toMove = getPieceByRowColumnIndex(DragPos.X, DragPos.Y);
-					System.out.println("customStack ha size "+ p.getChildren().size());
+//					System.out.println("customStack ha size "+ p.getChildren().size());
 					//System.out.println("la pos è occupata da: "+manager.getChessBoard().getChessboardPosition()[(int) r.getX()][(int) r.getY()].occupied);
 					
 					if(toMove != null && manager.move(toMove.getLogicPiece(), manager.getChessBoard().getChessboardPosition()[(int) r.getX()][(int) r.getY()])){
 						toMove.updatePos();
 						p.addPiece(toMove);
 						
-						/*if(toMove.getLogicPiece() instanceof Pawn){
-							PieceGui enPassant = null;
-							if(checkPos(toMove.getLogicPiece().getPosition().X, toMove.getLogicPiece().getPosition().Y-1) && getPieceByRowColumnIndex(toMove.getLogicPiece().getPosition().X, toMove.getLogicPiece().getPosition().Y-1).getLogicPiece() instanceof Pawn)
-								enPassant = getPieceByRowColumnIndex(toMove.getLogicPiece().getPosition().X, toMove.getLogicPiece().getPosition().Y-1);
-							else if(checkPos(toMove.getLogicPiece().getPosition().X, toMove.getLogicPiece().getPosition().Y+1) && getPieceByRowColumnIndex(toMove.getLogicPiece().getPosition().X, toMove.getLogicPiece().getPosition().Y+1).getLogicPiece() instanceof Pawn)
-								enPassant = getPieceByRowColumnIndex(toMove.getLogicPiece().getPosition().X, toMove.getLogicPiece().getPosition().Y+1);
+						if(toMove != null && toMove.getLogicPiece() instanceof Pawn){
 							
-							if(toMove != null && enPassant != null && manager.eat(toMove.getLogicPiece(), enPassant.getLogicPiece())){
-								System.out.println(enPassant.getClass());
+							//Piece go = getPieceByRowColumnIndex(toMove.getLogicPiece().getPosition().X, toMove.getLogicPiece().getPosition().Y-1).getLogicPiece();
+
+							System.out.println("prima di mangiare");
+//							System.out.println(toMove.getClass());
+							if(enPassant != null && manager.eat(toMove.getLogicPiece(), enPassant.getLogicPiece())){
 								
+								System.out.println("entro bene");
 								eaten.add(enPassant.getLogicPiece());
 								p.getChildren().remove(enPassant);
 								p.addPiece(toMove);
 							}
-						}*/
+							System.out.println("dopo");
+						}
+						changeTurn();
+
 					}
 					else if(p.getChildren().size() == 2){
 						PieceGui toEat = (PieceGui) p.getChildren().get(1);
@@ -224,8 +248,10 @@ public class ChessBoardGui extends GridPane {
 							eaten.add(toEat.getLogicPiece());
 							p.getChildren().remove(toEat);
 							p.addPiece(toMove);
+							changeTurn();
 						}
 					}
+
 					
 					
 				/*	for(int i = 0 ; i < 8 ; i++){
@@ -247,6 +273,13 @@ public class ChessBoardGui extends GridPane {
 			return false;
 		
 		return true;
+	}
+	
+	void changeTurn(){
+		if(manager.turn == 1)
+			manager.turn = 0;
+		else
+			manager.turn = 1;
 	}
 
 }
