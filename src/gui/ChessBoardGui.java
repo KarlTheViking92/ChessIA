@@ -227,9 +227,11 @@ public class ChessBoardGui extends GridPane {
 					PieceGui toMove = getPieceByRowColumnIndex(DragPos.X, DragPos.Y);
 					
 					if(toMove != null && p.getChildren().size() == 1){
-						if(manager.move(toMove.getLogicPiece(), manager.getChessBoard().getChessboardPosition()[(int) r.getX()][(int) r.getY()]))
+						if(manager.move(toMove.getLogicPiece(), manager.getChessBoard().getChessboardPosition()[(int) r.getX()][(int) r.getY()])){
 							toMove.updatePos();
 							p.addPiece(toMove);
+							changeTurn();
+						}
 						
 						if(toMove != null && toMove.getLogicPiece() instanceof Pawn ){
 							if(enPassant != null && manager.eat(toMove.getLogicPiece(), enPassant.getLogicPiece())){
@@ -237,9 +239,10 @@ public class ChessBoardGui extends GridPane {
 								CustomStackPane st = (CustomStackPane) getStackByRowColumnIndex(enPassant.getLogicPiece().getPosition().X, enPassant.getLogicPiece().getPosition().Y);
 								st.getChildren().remove(enPassant);
 								p.addPiece(toMove);
+								changeTurn();
 							}
 						}
-						changeTurn();
+						
 
 					}
 					else if(p.getChildren().size() == 2){
