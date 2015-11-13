@@ -27,15 +27,16 @@ import logic.ChessManager;
 
 public class MainFrame extends Application {
 	
-	static ChessManager manager;
+	public ChessManager manager;
 	ChessBoardGui gui;
+	private PromotionPanel prom;
 
 	@Override
 	public void start(Stage arg0) throws Exception {
-		final PromotionPanel promotion = new PromotionPanel();
+		
 		final EatenPieces eaten = new EatenPieces();
 		manager = new ChessManager();
-		gui = new ChessBoardGui( manager , eaten  );
+		gui = new ChessBoardGui( manager , eaten , prom );
 		
 		final FlowPane flow = new FlowPane(85.00, 800.00);
 		//flow.setAlignment(Pos.CENTER);
@@ -49,11 +50,7 @@ public class MainFrame extends Application {
 
 			@Override
 			public void handle(Event arg0) {
-				Stage newStage = new Stage();
-				newStage.initModality(Modality.APPLICATION_MODAL);
-				newStage.setTitle("Pop up window");
-				newStage.setScene(promotion);
-				newStage.showAndWait();
+//				promotion = new PromotionPanel();
 			}
 		});
 		
@@ -95,6 +92,8 @@ public class MainFrame extends Application {
 					turn.setText("È il turno del " + "\n" + " Nero");
 				
 				eaten.draw();
+				/*if(prom != null)
+					prom.showAndWait();*/
 				
 			}
 		}.start();

@@ -67,5 +67,9 @@ public abstract class Piece {
 	public Image getImage(){
 		return img;
 	}
+	
+	public int getColour(){
+		return colour;
+	}
 
 }

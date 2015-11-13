@@ -33,12 +33,14 @@ public class ChessBoardGui extends GridPane {
 	List<Rectangle> colored;
 //	boolean drag;
 	private Position DragPos;
-	ChessManager manager;
-	ArrayList<Piece> eaten;
-	PieceGui enPassant;
+	public ChessManager manager;
+	private ArrayList<Piece> eaten;
+	private PieceGui enPassant;
+	private PromotionPanel promotion;
 	
-	public ChessBoardGui(final ChessManager manager , final EatenPieces eaten) {
+	public ChessBoardGui(final ChessManager manager , final EatenPieces eaten , PromotionPanel prom) {
 		
+		this.promotion = prom;
 		this.eaten = eaten.getList();
 		this.manager = manager;
 		this.colored = new ArrayList<>();
@@ -197,14 +199,12 @@ public class ChessBoardGui extends GridPane {
 								PieceGui p = getPieceByRowColumnIndex(tmp.getLogicPiece().getPosition().X, tmp.getLogicPiece().getPosition().Y-1);
 								if( p != null &&  p.getLogicPiece().getPosition().occupied != manager.turn){
 									enPassant = p;
-									System.out.println("inizializzo enpassant");
 								}
 							}
 							if(checkPos(tmp.getLogicPiece().getPosition().X, tmp.getLogicPiece().getPosition().Y+1) ){
 								PieceGui p = getPieceByRowColumnIndex(tmp.getLogicPiece().getPosition().X, tmp.getLogicPiece().getPosition().Y+1);
 									if(p != null && p.getLogicPiece().getPosition().occupied != manager.turn){
 										enPassant = p;
-										System.out.println("enpassant inizializato con pos "+ enPassant.getLogicPiece().getPosition().X + " "+enPassant.getLogicPiece().getPosition().Y);
 									}
 							}
 						}
@@ -247,15 +247,28 @@ public class ChessBoardGui extends GridPane {
 					}
 					else if(p.getChildren().size() == 2){
 						PieceGui toEat = (PieceGui) p.getChildren().get(1);
-						System.out.println("entro per mangiare");
 						if(toMove != null && manager.eat(toMove.getLogicPiece(), toEat.getLogicPiece())){
 							
 							eaten.add(toEat.getLogicPiece());
 							p.getChildren().remove(toEat);
 							p.addPiece(toMove);
-							System.out.println("ti mangio, ti mangio");
 							changeTurn();
 						}
+					}
+					
+					if(toMove.getLogicPiece() instanceof Pawn && (toMove.getLogicPiece().getPosition().X == 0 || toMove.getLogicPiece().getPosition().X == 7)){
+						System.out.println("promuovo");
+						promotion = new PromotionPanel(toMove);
+						System.out.println(promotion.response);
+						p.getChildren().remove(toMove);
+						System.out.println("Prima: "+ toMove.getLogicPiece().getClass());
+						
+						Piece promove = manager.promove(toMove.getLogicPiece(), promotion.response);
+						toMove.setPiece(promove);
+						
+						System.out.println("Dopo: "+toMove.getLogicPiece().getClass());
+						p.addPiece(toMove);
+						
 					}
 				}
 			});

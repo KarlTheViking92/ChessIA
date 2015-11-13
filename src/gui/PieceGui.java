@@ -37,6 +37,12 @@ public class PieceGui extends Rectangle {
 		return piece;
 	}
 	
+	public void setPiece(Piece p){
+		this.piece = p;
+		this.setFill( new ImagePattern(p.getImage()));
+		this.updatePos();
+	}
+	
 	public ArrayList<Position> calculate( Position pos[][]){
 		return piece.permittedMoves(pos);
 	}

@@ -67,22 +67,7 @@ public class Chessboard {
 		return black;
 	}
 	
-	
-	public static void main(String[] args) {
-		Chessboard chess = new Chessboard();
-		ArrayList<Piece> white = chess.white;
-		ArrayList<Piece> black = chess.black;
-/*		
-		for (Piece piece : black) {
-			System.out.println(piece.name + " "+ piece.actualPos.X +" "+ piece.actualPos.Y);
-			
-			ArrayList<Position> mosse = piece.permittedMoves(chess.chessboardPosition);
-//			System.out.println("la size è: "+ mosse.size());
-			for (Position pos : mosse) {
-				System.out.println(pos.X + " "+ pos.Y);
-			}
-		}*/
-	}
+
 	
 	
 }

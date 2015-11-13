@@ -6,7 +6,7 @@ import javafx.scene.image.Image;
 
 public class ChessManager {
 
-	private Chessboard chessboard;
+	public Chessboard chessboard;
 	private ArrayList<Gesture> history;
 	public int turn;
 	
@@ -49,7 +49,7 @@ public class ChessManager {
 	
 	public boolean eat(Piece p1, Piece p2){
 		
-		System.out.println("entro in eat e il turno è "+ turn);
+//		System.out.println("entro in eat e il turno è "+ turn);
 		boolean hasEaten = false;
 		
 		if(turn == p1.colour){
@@ -61,27 +61,19 @@ public class ChessManager {
 				}
 //				System.out.println(p1.getClass() + "   "+ p2.getClass());
 				if((p1 instanceof Pawn) && (p2 instanceof Pawn)){
-					System.out.println("entro nella parte dei pedoni");
+//					System.out.println("entro nella parte dei pedoni");
 					int s = 1;
 					if(p1.colour == 1)
 						s = -1;
-//					System.out.println("p1 :   "+p1.getPosition().X + "  "+ p1.getPosition().Y);
-//					System.out.println("p2 :   "+p2.getPosition().X + "  "+ p2.getPosition().Y);
-//					System.out.println("s:  " + s);
 					if ( !hasEaten && ((p1.getPosition().X - s == p2.getPosition().X  && p1.getPosition().Y == p2.getPosition().Y ) || (p1.getPosition().X+ s == p2.getPosition().X && p1.getPosition().Y - s == p2.getPosition().Y ))) {
-						System.out.println("entro nell'if dove devo entrare");
 						if(!history.isEmpty()){
 							
-//							System.out.println(" history size: "+history.size());
 							Gesture last = history.get(history.size()-3);
-							//System.out.println("last turno "+last.getTurn() + " nome:  " + last.getPiece().name+ " startingPos  " + last.getStartingPosition().X + " " + last.getStartingPosition().Y);
-							//System.out.println("final pos: "+ last.getFinalPosition().X + "   " + last.getFinalPosition().Y);
 							Position tmp = last.getFinalPosition();
 							if ( !tmp.equals(new Position(p1.getPosition().X -s , p1.getPosition().Y+s)) ){
 								throw new RuntimeException("Mossa Non Valida");
 							}
 							else{
-								System.out.println("mangio bene");
 								//hasEaten = true;
 								p2.eaten = true;
 								hasEaten = true;
@@ -94,7 +86,6 @@ public class ChessManager {
 			return hasEaten;
 		}
 		else{
-			System.out.println("mangio e non è il mio turno");
 			return false;
 		}
 	}
@@ -111,47 +102,54 @@ public class ChessManager {
 	}
 	
 	
-	public void promove(Piece p, String s){
+	public Piece promove(Piece p, String s){
 		if(p.colour == 1){
+			
+			chessboard.getWhite().remove(p);
 			if(p instanceof Pawn && !p.promoved && p.actualPos.X==0){
-				p.promoved = true;
+				
 				switch(s){
 				case "Queen" :
-					Piece queen = new Queen(new Image("file:data/WhiteQueen.png"), 1, p.actualPos);
+					p = new Queen(new Image("file:data/WhiteQueen.png"), 1, p.actualPos);
 					break;
 				case "Rook" :
-					Piece rook = new Rook(new Image("file:data/WhiteRook.png"),1,p.actualPos);
+					p = new Rook(new Image("file:data/WhiteRook.png"),1,p.actualPos);
 					break;
 				case "Knight" : 
-					Piece knight = new Knight(new Image("file:data/WhiteKnight.png"),1,p.actualPos);
+					p = new Knight(new Image("file:data/WhiteKnight.png"),1,p.actualPos);
 					break;
 				case "Bishop" :
-					Piece bishop = new Bishop(new Image("file:data/WhiteBishop.png"), 1, p.actualPos);
+					p = new Bishop(new Image("file:data/WhiteBishop.png"), 1, p.actualPos);
 					break;
 				}
 			}
+			chessboard.getWhite().add(p);
 		}
 		
 		if(p.colour == 0){
+			
+			chessboard.getBlack().remove(p);
 			if(p instanceof Pawn && !p.promoved && p.actualPos.X==7){
-				p.promoved = true;
+				
 				switch(s){
 				case "Queen" :
-					Piece queen = new Queen(new Image("file:data/BlackQueen.png"), 0, p.actualPos);
+					p = new Queen(new Image("file:data/BlackQueen.png"), 0, p.actualPos);
 					break;
 				case "Rook" :
-					Piece rook = new Rook(new Image("file:data/BlackRook.png"), 0,p.actualPos);
+					p = new Rook(new Image("file:data/BlackRook.png"), 0,p.actualPos);
 					break;
 				case "Knight" : 
-					Piece knight = new Knight(new Image("file:data/BlackKnight.png"), 0,p.actualPos);
+					p = new Knight(new Image("file:data/BlackKnight.png"), 0,p.actualPos);
 					break;
 				case "Bishop" :
-					Piece bishop = new Bishop(new Image("file:data/BlackBishop.png"), 0, p.actualPos);
+					p = new Bishop(new Image("file:data/BlackBishop.png"), 0, p.actualPos);
 					break;
 				}
 			}
+			chessboard.getBlack().add(p);
 		}
-		
+		p.promoved = true;
+		return p;
 	}
 	
 	public boolean checkMate(){
