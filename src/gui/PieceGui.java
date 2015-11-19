@@ -22,15 +22,6 @@ public class PieceGui extends Rectangle {
 		this.setX(piece.getPosition().X);
 		this.setY(piece.getPosition().Y);
 		
-		/*this.setOnDragDetected(new EventHandler<MouseEvent>() {
-
-			@Override
-			public void handle(MouseEvent arg0) {
-				System.out.println("drag detected");
-				//System.out.println(arg0.getSceneX() + " " + arg0.getSceneY());
-				
-			}
-		});*/
 	}
 	
 	public Piece getLogicPiece(){

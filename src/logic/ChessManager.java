@@ -22,83 +22,47 @@ public class ChessManager {
 	}
 	
 	public boolean move(Piece p,Position newPos){
+		
 		if(turn == p.colour){
-			ArrayList<Position> position = p.permittedMoves(chessboard.getChessboardPosition());
-			for (Position pos : position) {
-				if(pos.equals(newPos)){
-					history.add(new Gesture(p, p.actualPos, newPos, p.colour));
-					p.actualPos.occupied = -1;
-					p.setPosition(newPos);
-					
-				/*	if(turn == 1)
-						turn = 0;
-					else
-						turn = 1;
-					t++;
-					System.out.println("cambio il turno: " + t);*/
-					return true;
-				}
-			}
-			return false;
+				
+		Gesture g = new Gesture(p, p.actualPos, newPos, p.colour);
+		history.add(g);
+	/*	System.out.println(g.getTurn() + " " + g.getPiece().name);
+		System.out.println("Posizione iniziale   " + g.getStartingPosition().X + " " + g.getStartingPosition().Y);
+		System.out.println("Posizione finale   " + g.getFinalPosition().X + " " + g.getFinalPosition().Y);*/
+		p.actualPos.occupied = -1;
+		p.setPosition(newPos);
+		return true;
+		
 		}
-		else{
-			System.out.println("non è il tuo turno");
-			return false;
-		}
+	else{
+		return false;
+	}
 	}
 	
-	public boolean eat(Piece p1, Piece p2){
+	public boolean eat(Piece p1, Piece p2) throws RuntimeException{
 		
-//		System.out.println("entro in eat e il turno è "+ turn);
+		System.out.println("entro in eat e il turno è "+ turn);
 		boolean hasEaten = false;
 		
 		if(turn == p1.colour){
 			if(p1.colour != p2.colour && !(p2 instanceof King)){
 				
-				if(move(p1,p2.actualPos)){
+				if((p1 instanceof Pawn) && (p2 instanceof Pawn)){
+					//hasEaten = enPassant(p1, p2, hasEaten);
+				}
+				
+				/*else if(move(p1,p2.actualPos) && !hasEaten){
 					p2.eaten = true;
 					hasEaten = true;
-				}
-//				System.out.println(p1.getClass() + "   "+ p2.getClass());
-				if((p1 instanceof Pawn) && (p2 instanceof Pawn)){
-//					System.out.println("entro nella parte dei pedoni");
-					int s = 1;
-					if(p1.colour == 1)
-						s = -1;
-					if ( !hasEaten && ((p1.getPosition().X - s == p2.getPosition().X  && p1.getPosition().Y == p2.getPosition().Y ) || (p1.getPosition().X+ s == p2.getPosition().X && p1.getPosition().Y - s == p2.getPosition().Y ))) {
-						if(!history.isEmpty()){
-							
-							Gesture last = history.get(history.size()-3);
-							Position tmp = last.getFinalPosition();
-							if ( !tmp.equals(new Position(p1.getPosition().X -s , p1.getPosition().Y+s)) ){
-								throw new RuntimeException("Mossa Non Valida");
-							}
-							else{
-								//hasEaten = true;
-								p2.eaten = true;
-								hasEaten = true;
-							}
-						}
-					}
-				}
+				}*/
 			}
-//			turn = p2.colour;
+			System.out.println("return "+hasEaten);
 			return hasEaten;
 		}
 		else{
 			return false;
 		}
-	}
-	
-	public boolean checkMove(Piece p, Position next){
-		
-		ArrayList<Position> position = p.permittedMoves(chessboard.getChessboardPosition());
-		for (Position pos : position) {
-			if(pos.equals(next)){				
-				return true;
-			}
-		}
-		return false;
 	}
 	
 	
@@ -152,64 +116,172 @@ public class ChessManager {
 		return p;
 	}
 	
-	public boolean checkMate(){
+	public boolean checkMate(ArrayList<Piece> enemy ){
 
-		ArrayList<Piece> toCheck;
+		ArrayList<Piece> toCheck = enemy;
 		boolean check = true;
-		if(turn == 1)
-			toCheck = chessboard.getBlack();
-		else
-			toCheck = chessboard.getWhite();
+//		if(turn == 1)
+//			toCheck = chessboard.getBlack();
+//		else
+//			toCheck = chessboard.getWhite();
 		
 		for (Piece piece : toCheck) {
 			ArrayList<Position> permitted = piece.permittedMoves(chessboard.getChessboardPosition());
 			for (Position position : permitted) {
-				if(checkMove(piece, position))
-					check = false;
+//				if(checkMove(piece, position))
+//					check = false;
 			}
 		}	
 		return check;
 	}
 	
-	public void update(){
+	public void update() throws RuntimeException{
+		System.out.println("entro in update");
 		ArrayList<Piece> enemyPlayer;
 		ArrayList<Piece> myPlayer;
 		String message;
+		System.out.println("turno del : " + turn);
 		if(turn == 0){
-			enemyPlayer = chessboard.getBlack();
-			myPlayer = chessboard.getWhite();
-		}
-		else{
 			enemyPlayer = chessboard.getWhite();
 			myPlayer = chessboard.getBlack();
+			message = "Nero";
 		}
-		if(turn == 0)
-			message = "Black";
-		else
-			message = "White";
-		for (Piece piece : enemyPlayer) {
-			if(piece instanceof King && !this.isPermitKing((King) piece, enemyPlayer)){
-				System.out.println("scacco al Re "+message);
+		else{
+			enemyPlayer = chessboard.getBlack();
+			myPlayer = chessboard.getWhite();
+			message = "Bianco";
+		}
+
+		for (Piece piece : myPlayer) {
+			if(piece instanceof King && !isPermitKing((King) piece, enemyPlayer)){
+				System.out.println("sei tu?");
+				throw new RuntimeException("Scacco al Re");
+			}
+		}
+		
+	/*	if(checkMate(enemyPlayer)){
+			System.out.println("Scacco matto");
+			throw new RuntimeException("Scacco Matto");
+		} */
+	}
+	
+	public boolean isPermitKing(King k, ArrayList<Piece> enemy) throws RuntimeException{
+		for (Piece piece : enemy) {
+				ArrayList<Position> permitted = piece.permittedMoves(chessboard.getChessboardPosition());
+				for (Position position : permitted) {
+					if(position.equals(k.actualPos)){
+						//throw new RuntimeException("Re Sotto Scacco");
+						return false;
+					}
+			}
+		}
+		
+		return true;
+	}
+
+	public int checkMove(Piece p, Position next) throws RuntimeException{
+		
+		System.out.println("voglio andare in posizione "+ next.X + " " + next.Y);
+		ArrayList<Position> position = p.permittedMoves(chessboard.getChessboardPosition());
+		ArrayList<Piece> myPlayer;
+		ArrayList<Piece> enemy;
+		System.out.println("il turno è : " + turn);
+		if(turn == 0){
+			myPlayer = this.getChessBoard().getBlack();
+			enemy = this.getChessBoard().getWhite();
+		}else{
+			myPlayer = this.getChessBoard().getWhite();
+			enemy = this.getChessBoard().getBlack();
+		}
+		King enemyKing = getKing(enemy);
+		King myKing = getKing(myPlayer);
+		
+		
+		for (Position pos : position) {
 			
-				if(this.checkMate()){
-					System.out.println("Scacco matto");
+			if(pos.equals(next) && !enemyKing.getPosition().equals(next)){			
+				
+				int tmpOccupied = next.occupied;
+				Position initial = p.getPosition();
+				
+				//p.setPosition(next);
+				move(p, next);
+				turn = enemyKing.colour;
+				
+				boolean hasEaten = false;
+				try{
+				for (Piece enemyPiece : enemy) {
+										
+					if (next.equals(enemyPiece.getPosition()) && !enemyPiece.eaten) {
+						System.out.println("HO TROVATO IL PEZZO DA MANGIARE");
+						System.out.println("mangio in logic");
+						enemyPiece.eaten = true;
+						hasEaten = true;
+					}	
 				}
+				if(p instanceof Pawn)
+					
+						enPassant(p, next, initial, hasEaten);
+						
+				if(p instanceof Pawn && (p.getPosition().X == 0 || p.getPosition().X == 7) ){
+//					promove(p, s);
+				}
+				if(!isPermitKing(myKing, enemy))
+					throw new RuntimeException("Re Sotto Scacco");
+				
+			/*	for (int i = 0; i < 8; i++) {
+					for (int j = 0; j < 8; j++) {
+						System.out.print(chessboard.getChessboardPosition()[i][j].occupied + "   ");
+					}
+					System.out.println();
+				}*/
+				
+				
+				}catch(RuntimeException ru){
+					if(ru.getLocalizedMessage() == "Mossa Non Valida" || ru.getLocalizedMessage() == "Re Sotto Scacco" ){
+						System.out.println("ecceccion");
+						turn = p.colour;
+						move(p, initial);
+						next.occupied = tmpOccupied;
+						throw ru;
+					}
+				}
+			}//fine if
+		}
+		return turn;
+		
+	}
+	
+	private King getKing(ArrayList<Piece> list){
+		for (Piece piece : list) {
+			if (piece instanceof King) {
+				return (King) piece;
+			}
+		}
+		return null;
+	}
+	
+	private void enPassant(Piece p1, Position next, Position prev, boolean hasEaten) throws RuntimeException{
+		int s; 
+		if(p1.colour == 1)
+			s = -1;
+		else
+			s = 1;
+		if (p1 instanceof Pawn && !hasEaten && ( ( next.X == prev.X+s && next.Y == prev.Y+s ) || ( next.X == prev.X+s && next.Y == prev.Y-s ) ) ) {
+			if (!history.isEmpty()) {
+				
+				Gesture g = history.get(history.size() - 2);
+				
+				Position p2Init = g.getStartingPosition();
+
+				if( !(p2Init.X-s == next.X  &&  p2Init.Y == next.Y) )
+					throw new RuntimeException("Mossa Non Valida");
+				else
+					{g.getPiece().eaten = true;	System.out.println("appo enpassant giusto");	}	
 			}
 		}
 	}
 	
-	public boolean isPermitKing(King k, ArrayList<Piece> enemy){
-		for (Piece piece : enemy) {
-			if(!piece.eaten && !piece.promoved){
-				ArrayList<Position> permitted = piece.permittedMoves(chessboard.getChessboardPosition());
-				for (Position position : permitted) {
-					if(position.equals(k.actualPos))
-						return true;
-				}
-			}
-		}
-		
-		return false;
-	}
+	
 	
 }

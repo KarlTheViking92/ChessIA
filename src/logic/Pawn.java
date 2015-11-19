@@ -10,6 +10,7 @@ public class Pawn extends Piece {
 	
 	private ArrayList<Piece> enemyPieces;
 	private int s ,t, u;
+	public boolean mossa = false;
 
 	public Pawn(Image img, int col, Position pos, ArrayList<Piece> eP) {
 		super("pawn", img, col, 1 , pos);
@@ -46,7 +47,6 @@ public class Pawn extends Piece {
 			isEnPassant(-s, pos);
 		}
 		
-		
 		return permpos;
 	}
 	
@@ -64,7 +64,7 @@ public class Pawn extends Piece {
 	}
 
 
-	public ArrayList<Position> permittedMovesKing (Position pos [] []){
+	public ArrayList<Position> permittedMovesKing (Position pos [][]){
 		if(colour == 0)
 			s=1;
 		else 

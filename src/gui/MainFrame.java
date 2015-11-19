@@ -1,26 +1,15 @@
 package gui;
 
-import com.sun.glass.events.MouseEvent;
-
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.beans.InvalidationListener;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import logic.ChessManager;
@@ -45,16 +34,7 @@ public class MainFrame extends Application {
 		final Label turn = new Label(Integer.toString(manager.turn));
 
 		flow.getChildren().add(turn);
-		Button btn = new Button("Prova");
-		btn.setOnMouseClicked(new EventHandler<Event>() {
-
-			@Override
-			public void handle(Event arg0) {
-//				promotion = new PromotionPanel();
-			}
-		});
-		
-		flow.getChildren().add(btn);
+				
 		
 		arg0.setTitle("Scacchi AI");
 		//BorderPane main = new BorderPane();

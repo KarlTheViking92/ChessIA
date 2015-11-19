@@ -2,28 +2,21 @@ package gui;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.sun.glass.events.MouseEvent;
-
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseDragEvent;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import logic.ChessManager;
-import logic.Chessboard;
 import logic.Pawn;
 import logic.Piece;
 import logic.Position;
@@ -31,7 +24,6 @@ import logic.Position;
 public class ChessBoardGui extends GridPane {
 
 	List<Rectangle> colored;
-//	boolean drag;
 	private Position DragPos;
 	public ChessManager manager;
 	private ArrayList<Piece> eaten;
@@ -44,13 +36,11 @@ public class ChessBoardGui extends GridPane {
 		this.eaten = eaten.getList();
 		this.manager = manager;
 		this.colored = new ArrayList<>();
-		//this.eaten = new ArrayList<>();
 	    this.setAlignment(Pos.CENTER);
 	    this.setHgap(2);
 	    this.setVgap(2);
 	    this.setPadding(new Insets(25));
 	    this.setGridLinesVisible(false);
-//	    this.drag = false;
 	    
 	    for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
@@ -71,18 +61,18 @@ public class ChessBoardGui extends GridPane {
 					
 					if(piecePos.occupied == 0){
 						for (Piece blackPiece : manager.getChessBoard().getBlack()) {
-							if(blackPiece.getPosition().equals(piecePos)){
-								//stack.getChildren().add(new PieceGui(blackPiece));
+							if(blackPiece.getPosition().equals(piecePos) && !blackPiece.eaten){
 								myStack.addPiece(new PieceGui(blackPiece));
+								//rect.setFill(new ImagePattern(blackPiece.getImage()));
 								break;
 							}
 						}
 					}
 					else{
 						for (Piece whitePiece : manager.getChessBoard().getWhite()) {
-							if(whitePiece.getPosition().equals(piecePos)){
-								//stack.getChildren().add(new PieceGui(whitePiece));
+							if(whitePiece.getPosition().equals(piecePos) && !whitePiece.eaten){
 								myStack.addPiece(new PieceGui(whitePiece));
+								//rect.setFill(new ImagePattern(whitePiece.getImage()));
 								break;
 							}
 						}
@@ -95,8 +85,9 @@ public class ChessBoardGui extends GridPane {
 
 					@Override
 					public void handle(Event arg0) {
+						
 						for (Node child : myStack.getChildren()) {
-							if(child instanceof PieceGui){
+							if(child instanceof PieceGui && manager.turn == ((PieceGui) child).getLogicPiece().getColour()){
 								for (Position pos : ((PieceGui) child).calculate(manager.getChessBoard().getChessboardPosition())) {
 									Rectangle n = getNodeByRowColumnIndex(pos.X, pos.Y);
 									n.setFill(Color.web("#0000FF"));
@@ -125,8 +116,50 @@ public class ChessBoardGui extends GridPane {
 				this.add(myStack, j, i);	
 			}
 		}
+
 	    setDragAndDrop();
 	    
+	}
+	public void repaint(){
+		
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				
+				Position piecePos = this.manager.getChessBoard().getChessboardPosition()[i][j];
+				CustomStackPane tmp = ((CustomStackPane) getStackByRowColumnIndex(i, j));
+				if(tmp.getChildren().size() == 2)
+					tmp.getChildren().remove(1);
+				
+				for (Rectangle r : colored) {
+					if((( r.getY() % 2) == 1 && (r.getX()%2) == 0) || ((r.getY() % 2) == 0 && (r.getX()%2) == 1))
+						r.setFill(Color.web("#ffdab9"));		
+					else
+						r.setFill(Color.web("#4c4c4c"));
+				}
+				colored.clear();
+				
+				if(piecePos.occupied != -1){
+					
+					if(piecePos.occupied == 0){
+						for (Piece blackPiece : manager.getChessBoard().getBlack()) {
+							if(blackPiece.getPosition().equals(piecePos) && !blackPiece.eaten){
+								tmp.addPiece(new PieceGui(blackPiece));
+								break;
+							}
+						}
+					}
+					else{
+						for (Piece whitePiece : manager.getChessBoard().getWhite()) {
+							if(whitePiece.getPosition().equals(piecePos) && !whitePiece.eaten ){
+								tmp.addPiece(new PieceGui(whitePiece));
+								break;
+							}
+						}
+					}
+				}
+				
+			}
+		}
 	}
 	
 	public Rectangle getNodeByRowColumnIndex(final int row,final int column) {
@@ -178,103 +211,6 @@ public class ChessBoardGui extends GridPane {
         return (StackPane) result;
     }
 	
-	private void setDragAndDrop(){
-		List<Node> children = this.getChildrenUnmodifiable();
-		for (Node node : children) {
-			
-			StackPane tmp = (StackPane) node;
-			
-			tmp.setOnDragDetected(new EventHandler<Event>() {
-
-				@Override
-				public void handle(Event arg0) {
-					
-//					drag = true;
-					if(arg0.getTarget() instanceof PieceGui && ((PieceGui)arg0.getTarget() ).getLogicPiece().getPosition().occupied == manager.turn){
-						DragPos = ((PieceGui)arg0.getTarget() ).getLogicPiece().getPosition();
-						PieceGui tmp = (PieceGui)arg0.getTarget();
-						
-						if(tmp.getLogicPiece() instanceof Pawn){
-							if(checkPos(tmp.getLogicPiece().getPosition().X, tmp.getLogicPiece().getPosition().Y-1)){
-								PieceGui p = getPieceByRowColumnIndex(tmp.getLogicPiece().getPosition().X, tmp.getLogicPiece().getPosition().Y-1);
-								if( p != null &&  p.getLogicPiece().getPosition().occupied != manager.turn){
-									enPassant = p;
-								}
-							}
-							if(checkPos(tmp.getLogicPiece().getPosition().X, tmp.getLogicPiece().getPosition().Y+1) ){
-								PieceGui p = getPieceByRowColumnIndex(tmp.getLogicPiece().getPosition().X, tmp.getLogicPiece().getPosition().Y+1);
-									if(p != null && p.getLogicPiece().getPosition().occupied != manager.turn){
-										enPassant = p;
-									}
-							}
-						}
-						
-						startFullDrag();
-					}
-					
-					arg0.consume();
-				}
-			});
-			
-			
-			tmp.setOnMouseDragReleased(new EventHandler<MouseDragEvent>() {
-
-				@Override
-				public void handle(MouseDragEvent arg0) {
-					System.out.println("tocca a : " +manager.turn);
-					Rectangle r = (Rectangle) arg0.getTarget();
-					CustomStackPane p = (CustomStackPane) arg0.getSource();
-					PieceGui toMove = getPieceByRowColumnIndex(DragPos.X, DragPos.Y);
-					
-					if(toMove != null && p.getChildren().size() == 1){
-						if(manager.move(toMove.getLogicPiece(), manager.getChessBoard().getChessboardPosition()[(int) r.getX()][(int) r.getY()])){
-							toMove.updatePos();
-							p.addPiece(toMove);
-							changeTurn();
-						}
-						
-						if(toMove != null && toMove.getLogicPiece() instanceof Pawn ){
-							if(enPassant != null && manager.eat(toMove.getLogicPiece(), enPassant.getLogicPiece())){
-								eaten.add(enPassant.getLogicPiece());
-								CustomStackPane st = (CustomStackPane) getStackByRowColumnIndex(enPassant.getLogicPiece().getPosition().X, enPassant.getLogicPiece().getPosition().Y);
-								st.getChildren().remove(enPassant);
-								p.addPiece(toMove);
-								changeTurn();
-							}
-						}
-						
-
-					}
-					else if(p.getChildren().size() == 2){
-						PieceGui toEat = (PieceGui) p.getChildren().get(1);
-						if(toMove != null && manager.eat(toMove.getLogicPiece(), toEat.getLogicPiece())){
-							
-							eaten.add(toEat.getLogicPiece());
-							p.getChildren().remove(toEat);
-							p.addPiece(toMove);
-							changeTurn();
-						}
-					}
-					
-					if(toMove.getLogicPiece() instanceof Pawn && (toMove.getLogicPiece().getPosition().X == 0 || toMove.getLogicPiece().getPosition().X == 7)){
-						System.out.println("promuovo");
-						promotion = new PromotionPanel(toMove);
-						System.out.println(promotion.response);
-						p.getChildren().remove(toMove);
-						System.out.println("Prima: "+ toMove.getLogicPiece().getClass());
-						
-						Piece promove = manager.promove(toMove.getLogicPiece(), promotion.response);
-						toMove.setPiece(promove);
-						
-						System.out.println("Dopo: "+toMove.getLogicPiece().getClass());
-						p.addPiece(toMove);
-						
-					}
-				}
-			});
-			
-		}
-	}
 	
 	boolean checkPos(int x, int y){
 		if(x > 7 || x < 0)
@@ -291,5 +227,118 @@ public class ChessBoardGui extends GridPane {
 		else
 			manager.turn = 1;
 	}
+	
+	private void setDragAndDrop(){
+		List<Node> children = this.getChildrenUnmodifiable();
+		for (Node node : children) {
+			
+			StackPane tmp = (StackPane) node;
+			
+			tmp.setOnDragDetected(new EventHandler<Event>() {
+
+				@Override
+				public void handle(Event arg0) {
+					
+//					drag = true;
+					if(arg0.getTarget() instanceof PieceGui && ((PieceGui)arg0.getTarget() ).getLogicPiece().getPosition().occupied == manager.turn){
+						DragPos = ((PieceGui)arg0.getTarget() ).getLogicPiece().getPosition();
+						
+					}
+					startFullDrag();
+					arg0.consume();
+				}
+			});
+			
+			
+			tmp.setOnMouseDragReleased(new EventHandler<MouseDragEvent>() {
+
+				@Override
+				public void handle(MouseDragEvent arg0) {
+					int turno = manager.turn;
+					System.out.println("tocca a : " +turno);
+					System.out.println(" mammeta  "+ arg0.getTarget().getClass());
+					
+					Rectangle r = (Rectangle) arg0.getTarget();
+					CustomStackPane p = (CustomStackPane) arg0.getSource();
+					PieceGui toMove = getPieceByRowColumnIndex(DragPos.X, DragPos.Y);
+					
+					try{
+					
+					if(arg0.getTarget() instanceof PieceGui){
+						PieceGui tmp = (PieceGui) arg0.getTarget();
+						
+						System.out.println("suarta "+tmp.getLogicPiece().getPosition().X + "  " + tmp.getLogicPiece().getPosition().Y);
+					
+						int u = manager.checkMove(toMove.getLogicPiece(), tmp.getLogicPiece().getPosition() );
+						
+						if(u != turno ){
+							System.out.println("mangio in gui");
+							
+						}
+					}
+					else{
+						System.out.println(" r " + r.getX() + " " + r.getY());
+						manager.checkMove(toMove.getLogicPiece(), manager.getChessBoard().getChessboardPosition()[(int) r.getX()][(int) r.getY()]);
+					}		
+					//promozione
+					if(toMove.getLogicPiece() instanceof Pawn && (toMove.getLogicPiece().getPosition().X == 0 || toMove.getLogicPiece().getPosition().X == 7)){
+						System.out.println("promuovo");
+						promotion = new PromotionPanel(toMove);
+						System.out.println(promotion.response);
+						p.getChildren().remove(toMove);
+						System.out.println("Prima: "+ toMove.getLogicPiece().getClass());
+						
+						Piece promove = manager.promove(toMove.getLogicPiece(), promotion.response);
+						toMove.setPiece(promove);
+						
+						System.out.println("Dopo: "+toMove.getLogicPiece().getClass());
+						p.addPiece(toMove);
+						
+					}
+					
+						manager.update();
+					}catch(RuntimeException ru){
+						if(ru.getLocalizedMessage() == "Re Sotto Scacco"){
+							System.out.println("Re sotto scacco, ESATTO");
+							Alert alert = new Alert(AlertType.INFORMATION);
+							alert.setTitle("Errore");
+							alert.setHeaderText(null);
+							alert.setContentText("La Mossa Lascia Il Re Sotto Scacco");
+
+							alert.showAndWait();
+						}
+						if (ru.getLocalizedMessage() == "Scacco Matto") {
+							System.out.println("Scacco Matto, BRAVOH");
+						}
+						if(ru.getLocalizedMessage() == "Mossa Non Valida"){
+							Alert alert = new Alert(AlertType.INFORMATION);
+							alert.setTitle("Errore");
+							alert.setHeaderText(null);
+							alert.setContentText("La Mossa Effettuata Non È Valida");
+
+							alert.showAndWait();
+						}
+						if(ru.getLocalizedMessage() == "Scacco al Re"){
+							/*System.out.println("entro nell eccezione dello scacco");
+							Alert alert = new Alert(AlertType.INFORMATION);
+							alert.setTitle("Errore");
+							alert.setHeaderText(null);
+//							alert.setContentText("Scacco al Re "+ ru.getMessage());
+							alert.setContentText(Integer.toString(turno));
+							alert.showAndWait();*/
+							
+						}
+							
+					}
+					repaint();
+				}
+				
+			});
+			
+		}
+	}
+	
+	
+	
 
 }

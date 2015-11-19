@@ -45,7 +45,6 @@ public class PromotionPanel extends Stage {
 
 			@Override
 			public void handle(Event arg0) {
-				System.out.println("mammeta");
 				response = "Queen";
 				PromotionPanel.this.close();
 			}
@@ -102,7 +101,6 @@ public class PromotionPanel extends Stage {
 
 			@Override
 			public void handle(Event arg0) {
-				System.out.println("mammeta");
 				PromotionPanel.this.close();
 			}
 		});
@@ -113,7 +111,6 @@ public class PromotionPanel extends Stage {
 
 			@Override
 			public void handle(Event arg0) {
-				// TODO Auto-generated method stub
 				PromotionPanel.this.close();
 				
 			}
@@ -125,7 +122,6 @@ public class PromotionPanel extends Stage {
 
 			@Override
 			public void handle(Event arg0) {
-				// TODO Auto-generated method stub
 				PromotionPanel.this.close();
 				
 			}
@@ -137,7 +133,6 @@ public class PromotionPanel extends Stage {
 
 			@Override
 			public void handle(Event arg0) {
-				// TODO Auto-generated method stub
 				PromotionPanel.this.close();
 				
 			}

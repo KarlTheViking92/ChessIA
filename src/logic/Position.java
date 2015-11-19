@@ -16,7 +16,7 @@ public class Position {
 		
 		Position tmp = (Position) other;
 		
-		if (this == tmp) return true;
+		//if (this == tmp) return true;
 		
 		if(this.X == tmp.X && this.Y == tmp.Y ) return true;
 		
