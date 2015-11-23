@@ -101,6 +101,7 @@ public class PromotionPanel extends Stage {
 
 			@Override
 			public void handle(Event arg0) {
+				response = "Queen";
 				PromotionPanel.this.close();
 			}
 		});
@@ -111,6 +112,7 @@ public class PromotionPanel extends Stage {
 
 			@Override
 			public void handle(Event arg0) {
+				response = "Rook";
 				PromotionPanel.this.close();
 				
 			}
@@ -122,6 +124,7 @@ public class PromotionPanel extends Stage {
 
 			@Override
 			public void handle(Event arg0) {
+				response = "Bishop";
 				PromotionPanel.this.close();
 				
 			}
@@ -133,6 +136,7 @@ public class PromotionPanel extends Stage {
 
 			@Override
 			public void handle(Event arg0) {
+				response = "Knight";
 				PromotionPanel.this.close();
 				
 			}

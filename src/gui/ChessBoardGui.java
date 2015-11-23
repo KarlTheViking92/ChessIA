@@ -14,7 +14,6 @@ import javafx.scene.input.MouseDragEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import logic.ChessManager;
 import logic.Pawn;
@@ -29,6 +28,7 @@ public class ChessBoardGui extends GridPane {
 	private ArrayList<Piece> eaten;
 	private PieceGui enPassant;
 	private PromotionPanel promotion;
+	private boolean scacco = false;
 	
 	public ChessBoardGui(final ChessManager manager , final EatenPieces eaten , PromotionPanel prom) {
 		
@@ -121,7 +121,7 @@ public class ChessBoardGui extends GridPane {
 	    
 	}
 	public void repaint(){
-		
+		System.out.println("repaint");
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				
@@ -257,33 +257,43 @@ public class ChessBoardGui extends GridPane {
 					int turno = manager.turn;
 					System.out.println("tocca a : " +turno);
 					System.out.println(" mammeta  "+ arg0.getTarget().getClass());
-					
 					Rectangle r = (Rectangle) arg0.getTarget();
+					String prom = null;
 					CustomStackPane p = (CustomStackPane) arg0.getSource();
 					PieceGui toMove = getPieceByRowColumnIndex(DragPos.X, DragPos.Y);
-					
+					System.out.println("scacco : " + scacco);
 					try{
 					
 					if(arg0.getTarget() instanceof PieceGui){
 						PieceGui tmp = (PieceGui) arg0.getTarget();
 						
 						System.out.println("suarta "+tmp.getLogicPiece().getPosition().X + "  " + tmp.getLogicPiece().getPosition().Y);
-					
-						int u = manager.checkMove(toMove.getLogicPiece(), tmp.getLogicPiece().getPosition() );
+						
+						if(!scacco && tmp.getLogicPiece().getPosition().X == 0 || tmp.getLogicPiece().getPosition().X == 7 && toMove.getLogicPiece() instanceof Pawn ){
+							promotion = new PromotionPanel(toMove);
+							prom = promotion.response;
+						}
+						
+						int u = manager.checkMove(toMove.getLogicPiece(), tmp.getLogicPiece().getPosition(), prom );
 						
 						if(u != turno ){
 							System.out.println("mangio in gui");
-							
 						}
 					}
 					else{
 						System.out.println(" r " + r.getX() + " " + r.getY());
-						manager.checkMove(toMove.getLogicPiece(), manager.getChessBoard().getChessboardPosition()[(int) r.getX()][(int) r.getY()]);
+						if(!scacco && r.getX() == 0 || r.getX() == 7 && toMove.getLogicPiece() instanceof Pawn ){
+							System.out.println("mammeta");
+							promotion = new PromotionPanel(toMove);
+							prom = promotion.response;
+						}
+						
+						manager.checkMove(toMove.getLogicPiece(), manager.getChessBoard().getChessboardPosition()[(int) r.getX()][(int) r.getY()], prom);
 					}		
 					//promozione
-					if(toMove.getLogicPiece() instanceof Pawn && (toMove.getLogicPiece().getPosition().X == 0 || toMove.getLogicPiece().getPosition().X == 7)){
+					/*if(toMove.getLogicPiece() instanceof Pawn && (toMove.getLogicPiece().getPosition().X == 0 || toMove.getLogicPiece().getPosition().X == 7)){
 						System.out.println("promuovo");
-						promotion = new PromotionPanel(toMove);
+//						promotion = new PromotionPanel(toMove);
 						System.out.println(promotion.response);
 						p.getChildren().remove(toMove);
 						System.out.println("Prima: "+ toMove.getLogicPiece().getClass());
@@ -294,8 +304,8 @@ public class ChessBoardGui extends GridPane {
 						System.out.println("Dopo: "+toMove.getLogicPiece().getClass());
 						p.addPiece(toMove);
 						
-					}
-					
+					}*/
+						scacco = false;
 						manager.update();
 					}catch(RuntimeException ru){
 						if(ru.getLocalizedMessage() == "Re Sotto Scacco"){
@@ -326,7 +336,11 @@ public class ChessBoardGui extends GridPane {
 //							alert.setContentText("Scacco al Re "+ ru.getMessage());
 							alert.setContentText(Integer.toString(turno));
 							alert.showAndWait();*/
+							scacco = true;
 							
+						}if(ru instanceof NullPointerException){
+							System.out.println("nullpointer");
+							ru.getStackTrace();
 						}
 							
 					}

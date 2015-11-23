@@ -66,54 +66,64 @@ public class ChessManager {
 	}
 	
 	
-	public Piece promove(Piece p, String s){
+	public void promove(Piece p, String s){
+		Piece tmp = null;
 		if(p.colour == 1){
 			
-			chessboard.getWhite().remove(p);
+						
 			if(p instanceof Pawn && !p.promoved && p.actualPos.X==0){
 				
 				switch(s){
 				case "Queen" :
-					p = new Queen(new Image("file:data/WhiteQueen.png"), 1, p.actualPos);
+					tmp = new Queen(new Image("file:data/WhiteQueen.png"), 1, p.actualPos);
 					break;
 				case "Rook" :
-					p = new Rook(new Image("file:data/WhiteRook.png"),1,p.actualPos);
+					tmp = new Rook(new Image("file:data/WhiteRook.png"),1,p.actualPos);
 					break;
 				case "Knight" : 
-					p = new Knight(new Image("file:data/WhiteKnight.png"),1,p.actualPos);
+					tmp = new Knight(new Image("file:data/WhiteKnight.png"),1,p.actualPos);
 					break;
 				case "Bishop" :
-					p = new Bishop(new Image("file:data/WhiteBishop.png"), 1, p.actualPos);
+					tmp = new Bishop(new Image("file:data/WhiteBishop.png"), 1, p.actualPos);
 					break;
 				}
 			}
-			chessboard.getWhite().add(p);
+			tmp.promoved = true;
+			chessboard.getWhite().remove(p);
+			chessboard.getWhite().add(tmp);
 		}
 		
 		if(p.colour == 0){
 			
-			chessboard.getBlack().remove(p);
 			if(p instanceof Pawn && !p.promoved && p.actualPos.X==7){
 				
 				switch(s){
 				case "Queen" :
-					p = new Queen(new Image("file:data/BlackQueen.png"), 0, p.actualPos);
+					tmp = new Queen(new Image("file:data/BlackQueen.png"), 0, p.actualPos);
 					break;
 				case "Rook" :
-					p = new Rook(new Image("file:data/BlackRook.png"), 0,p.actualPos);
+					tmp = new Rook(new Image("file:data/BlackRook.png"), 0,p.actualPos);
 					break;
 				case "Knight" : 
-					p = new Knight(new Image("file:data/BlackKnight.png"), 0,p.actualPos);
+					tmp = new Knight(new Image("file:data/BlackKnight.png"), 0,p.actualPos);
 					break;
 				case "Bishop" :
-					p = new Bishop(new Image("file:data/BlackBishop.png"), 0, p.actualPos);
+					tmp = new Bishop(new Image("file:data/BlackBishop.png"), 0, p.actualPos);
 					break;
 				}
 			}
-			chessboard.getBlack().add(p);
+			tmp.promoved = true;
+			chessboard.getBlack().remove(p);
+			chessboard.getBlack().add(tmp);
 		}
-		p.promoved = true;
-		return p;
+		for (Piece black : getChessBoard().getBlack()) {
+			System.out.println(black.promoved);
+		}
+		for (Piece white : getChessBoard().getWhite()) {
+			System.out.println(white.promoved);
+		}
+		
+		
 	}
 	
 	public boolean checkMate(ArrayList<Piece> enemy ){
@@ -179,7 +189,7 @@ public class ChessManager {
 		return true;
 	}
 
-	public int checkMove(Piece p, Position next) throws RuntimeException{
+	public int checkMove(Piece p, Position next , String promotion) throws RuntimeException{
 		
 		System.out.println("voglio andare in posizione "+ next.X + " " + next.Y);
 		ArrayList<Position> position = p.permittedMoves(chessboard.getChessboardPosition());
@@ -204,12 +214,15 @@ public class ChessManager {
 				int tmpOccupied = next.occupied;
 				Position initial = p.getPosition();
 				
+				
 				//p.setPosition(next);
 				move(p, next);
 				turn = enemyKing.colour;
 				
 				boolean hasEaten = false;
 				try{
+					if(!isPermitKing(myKing, enemy))
+						throw new RuntimeException("Re Sotto Scacco");
 				for (Piece enemyPiece : enemy) {
 										
 					if (next.equals(enemyPiece.getPosition()) && !enemyPiece.eaten) {
@@ -219,22 +232,22 @@ public class ChessManager {
 						hasEaten = true;
 					}	
 				}
-				if(p instanceof Pawn)
-					
-						enPassant(p, next, initial, hasEaten);
 						
-				if(p instanceof Pawn && (p.getPosition().X == 0 || p.getPosition().X == 7) ){
-//					promove(p, s);
-				}
-				if(!isPermitKing(myKing, enemy))
-					throw new RuntimeException("Re Sotto Scacco");
+
 				
-			/*	for (int i = 0; i < 8; i++) {
+				if(p instanceof Pawn)
+					enPassant(p, next, initial, hasEaten);
+				
+				if(p instanceof Pawn && (p.getPosition().X == 0 || p.getPosition().X == 7) ){
+					promove(p, promotion);
+				}
+				
+				for (int i = 0; i < 8; i++) {
 					for (int j = 0; j < 8; j++) {
 						System.out.print(chessboard.getChessboardPosition()[i][j].occupied + "   ");
 					}
 					System.out.println();
-				}*/
+				}
 				
 				
 				}catch(RuntimeException ru){
