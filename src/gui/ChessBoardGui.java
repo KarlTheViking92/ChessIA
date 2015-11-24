@@ -53,10 +53,9 @@ public class ChessBoardGui extends GridPane {
 				final CustomStackPane myStack = new CustomStackPane(rect);
 					
 				if(((j % 2) == 1 && (i%2) == 0) || ((j % 2) == 0 && (i%2) == 1))
-					rect.setFill(Color.web("#ffdab9"));		
-				else
 					rect.setFill(Color.web("#4c4c4c"));
-				
+				else	
+					rect.setFill(Color.web("#ffdab9"));	
 
 				Position piecePos = this.manager.getChessBoard().getChessboardPosition()[i][j];
 				
@@ -108,9 +107,9 @@ public class ChessBoardGui extends GridPane {
 					public void handle(Event arg0) {
 							for (Rectangle r : colored) {
 								if((( r.getY() % 2) == 1 && (r.getX()%2) == 0) || ((r.getY() % 2) == 0 && (r.getX()%2) == 1))
-									r.setFill(Color.web("#ffdab9"));		
-								else
-									r.setFill(Color.web("#4c4c4c"));
+									r.setFill(Color.web("#4c4c4c"));		
+								else	
+									r.setFill(Color.web("#ffdab9"));
 							}
 							colored.clear();
 						}
@@ -135,9 +134,9 @@ public class ChessBoardGui extends GridPane {
 				
 				for (Rectangle r : colored) {
 					if((( r.getY() % 2) == 1 && (r.getX()%2) == 0) || ((r.getY() % 2) == 0 && (r.getX()%2) == 1))
-						r.setFill(Color.web("#ffdab9"));		
+						r.setFill(Color.web("#4c4c4c"));		
 					else
-						r.setFill(Color.web("#4c4c4c"));
+						r.setFill(Color.web("#ffdab9"));
 				}
 				colored.clear();
 				

@@ -39,9 +39,9 @@ public class CustomStackPane extends StackPane {
 			public void handle(Event arg0) {
 				
 				if((( ((Rectangle)rect).getY() % 2) == 1 && (((Rectangle)rect).getX()%2) == 0) || ((((Rectangle)rect).getY() % 2) == 0 && (((Rectangle)rect).getX()%2) == 1))
-					rect.setFill(Color.web("#ffdab9"));		
-				else
-					rect.setFill(Color.web("#4c4c4c"));
+					rect.setFill(Color.web("#4c4c4c"));	
+				else	
+					rect.setFill(Color.web("#ffdab9"));	
 			}
 		});
 		
