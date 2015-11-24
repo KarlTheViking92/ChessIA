@@ -2,6 +2,9 @@ package gui;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.sun.corba.se.impl.protocol.giopmsgheaders.Message;
+
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -121,7 +124,7 @@ public class ChessBoardGui extends GridPane {
 	    
 	}
 	public void repaint(){
-		System.out.println("repaint");
+//		System.out.println("repaint");
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				
@@ -142,6 +145,8 @@ public class ChessBoardGui extends GridPane {
 					
 					if(piecePos.occupied == 0){
 						for (Piece blackPiece : manager.getChessBoard().getBlack()) {
+							if(blackPiece.eaten && !eaten.contains(blackPiece))
+								eaten.add(blackPiece);
 							if(blackPiece.getPosition().equals(piecePos) && !blackPiece.eaten){
 								tmp.addPiece(new PieceGui(blackPiece));
 								break;
@@ -150,6 +155,8 @@ public class ChessBoardGui extends GridPane {
 					}
 					else{
 						for (Piece whitePiece : manager.getChessBoard().getWhite()) {
+							if(whitePiece.eaten && !eaten.contains(whitePiece))
+								eaten.add(whitePiece);
 							if(whitePiece.getPosition().equals(piecePos) && !whitePiece.eaten ){
 								tmp.addPiece(new PieceGui(whitePiece));
 								break;
@@ -255,68 +262,47 @@ public class ChessBoardGui extends GridPane {
 				@Override
 				public void handle(MouseDragEvent arg0) {
 					int turno = manager.turn;
-					System.out.println("tocca a : " +turno);
-					System.out.println(" mammeta  "+ arg0.getTarget().getClass());
+					int mossa = -1;
+//					System.out.println("tocca a : " +turno);
+//					System.out.println(" mammeta  "+ arg0.getTarget().getClass());
 					Rectangle r = (Rectangle) arg0.getTarget();
-					String prom = null;
+					String prom = "promozione";
 					CustomStackPane p = (CustomStackPane) arg0.getSource();
 					PieceGui toMove = getPieceByRowColumnIndex(DragPos.X, DragPos.Y);
-					System.out.println("scacco : " + scacco);
+//					System.out.println("scacco : " + scacco);
 					try{
 					
 					if(arg0.getTarget() instanceof PieceGui){
 						PieceGui tmp = (PieceGui) arg0.getTarget();
 						
-						System.out.println("suarta "+tmp.getLogicPiece().getPosition().X + "  " + tmp.getLogicPiece().getPosition().Y);
+//						System.out.println("suarta "+tmp.getLogicPiece().getPosition().X + "  " + tmp.getLogicPiece().getPosition().Y);
 						
-						if(!scacco && tmp.getLogicPiece().getPosition().X == 0 || tmp.getLogicPiece().getPosition().X == 7 && toMove.getLogicPiece() instanceof Pawn ){
+						if(!scacco && (tmp.getLogicPiece().getPosition().X == 0 || tmp.getLogicPiece().getPosition().X == 7 ) && toMove.getLogicPiece() instanceof Pawn ){
 							promotion = new PromotionPanel(toMove);
 							prom = promotion.response;
 						}
 						
-						int u = manager.checkMove(toMove.getLogicPiece(), tmp.getLogicPiece().getPosition(), prom );
+						mossa = manager.next(toMove.getLogicPiece(), tmp.getLogicPiece().getPosition(), prom, false );
 						
-						if(u != turno ){
+						if(mossa != turno ){
 							System.out.println("mangio in gui");
 						}
 					}
 					else{
-						System.out.println(" r " + r.getX() + " " + r.getY());
-						if(!scacco && r.getX() == 0 || r.getX() == 7 && toMove.getLogicPiece() instanceof Pawn ){
-							System.out.println("mammeta");
+//						System.out.println(" r " + r.getX() + " " + r.getY());
+						if(!scacco && (r.getX() == 0 || r.getX() == 7 ) && toMove.getLogicPiece() instanceof Pawn ){
+//							System.out.println("mammeta");
 							promotion = new PromotionPanel(toMove);
 							prom = promotion.response;
 						}
-						
-						manager.checkMove(toMove.getLogicPiece(), manager.getChessBoard().getChessboardPosition()[(int) r.getX()][(int) r.getY()], prom);
+						System.out.println("prom : "+ prom);
+						mossa = manager.next(toMove.getLogicPiece(), manager.getChessBoard().getChessboardPosition()[(int) r.getX()][(int) r.getY()], prom, false);
 					}		
-					//promozione
-					/*if(toMove.getLogicPiece() instanceof Pawn && (toMove.getLogicPiece().getPosition().X == 0 || toMove.getLogicPiece().getPosition().X == 7)){
-						System.out.println("promuovo");
-//						promotion = new PromotionPanel(toMove);
-						System.out.println(promotion.response);
-						p.getChildren().remove(toMove);
-						System.out.println("Prima: "+ toMove.getLogicPiece().getClass());
-						
-						Piece promove = manager.promove(toMove.getLogicPiece(), promotion.response);
-						toMove.setPiece(promove);
-						
-						System.out.println("Dopo: "+toMove.getLogicPiece().getClass());
-						p.addPiece(toMove);
-						
-					}*/
+
 						scacco = false;
 						manager.update();
 					}catch(RuntimeException ru){
-						if(ru.getLocalizedMessage() == "Re Sotto Scacco"){
-							System.out.println("Re sotto scacco, ESATTO");
-							Alert alert = new Alert(AlertType.INFORMATION);
-							alert.setTitle("Errore");
-							alert.setHeaderText(null);
-							alert.setContentText("La Mossa Lascia Il Re Sotto Scacco");
 
-							alert.showAndWait();
-						}
 						if (ru.getLocalizedMessage() == "Scacco Matto") {
 							System.out.println("Scacco Matto, BRAVOH");
 						}
@@ -328,19 +314,19 @@ public class ChessBoardGui extends GridPane {
 
 							alert.showAndWait();
 						}
-						if(ru.getLocalizedMessage() == "Scacco al Re"){
-							/*System.out.println("entro nell eccezione dello scacco");
+						if(ru.getLocalizedMessage() == "Scacco Al Re"){
+							System.out.println("entro nell eccezione dello scacco");
 							Alert alert = new Alert(AlertType.INFORMATION);
 							alert.setTitle("Errore");
 							alert.setHeaderText(null);
-//							alert.setContentText("Scacco al Re "+ ru.getMessage());
-							alert.setContentText(Integer.toString(turno));
-							alert.showAndWait();*/
+							alert.setContentText("Scacco al re " + manager.turn );
+							//alert.setContentText("La Mossa Lascia Il Re Sotto Scacco");
+							alert.showAndWait();
 							scacco = true;
 							
 						}if(ru instanceof NullPointerException){
 							System.out.println("nullpointer");
-							ru.getStackTrace();
+//							ru.printStackTrace();
 						}
 							
 					}
