@@ -7,11 +7,11 @@ permittedMove(Piece,X,Y).
 blackPieces(Id,Name):-piece(Id,Name,_,0,_,_,_).
 whitePieces(Id,Name):-piece(Id,Name,_,1,_,_,_).
 
-pedinaSuScacchiera(P,X,Y):-pedina(P,_,_,_,_,_,_),scacchiera(X,Y).
-scacchiera(X,Y):-riga(X),colonna(Y).
-possoMangiare(P,P1,X,Y):-pedina(P,X,Y), pedina(P1,X,Y),P!=P1.
-:-mangia(P1,P,X,Y), mangia(P2,P,Z,C),P1!=P2.
-muove(P,X,Y,X1,Y1):-pedina(P,X,Y),mossaPermessa(P,X1,Y1).
-:-mangia(P,P1,X,Y),pedina(P1,"re",_,_,_,_,_).
+pieceOnChessboard(P,X,Y):-piece(P,_,_,_,_,_,_),chessboard(X,Y).
+chessboard(X,Y):-row(X),column(Y).
+canEat(P,P1,X,Y):-piece(P,X,Y), piece(P1,X,Y),P!=P1.
+:-eat(P1,P,X,Y), eat(P2,P,Z,C),P1!=P2.
+canMove(P,X,Y,X1,Y1):-piece(P,X,Y),permittedMove(P,X1,Y1).
+:-eat(P,P1,X,Y),piece(P1,"re",_,_,_,_,_).
 
-muove(P,X,Y,X1,Y1) | mangia(P,P1,X,Y):-  
+move(P,X,Y,X1,Y1) | eat(P,P1,X,Y):- canMove(P,X,Y,X1,Y1),canEat(P,P1,X,Y).
