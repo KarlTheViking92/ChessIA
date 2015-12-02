@@ -40,28 +40,28 @@ piece(15,"Knight", 3, 1, 0, 0, 0, 0 ).
 piece(16,"Rook", 5, 1, 0, 0, 0, 0 ).
 
  % mosse permesse %
-permittedMove( 1 , 2 , 0).
-permittedMove( 1 , 3 , 0).
-permittedMove( 2 , 2 , 1).
-permittedMove( 2 , 3 , 1).
-permittedMove( 3 , 2 , 2).
-permittedMove( 3 , 3 , 2).
-permittedMove( 4 , 2 , 3).
-permittedMove( 4 , 3 , 3).
-permittedMove( 5 , 2 , 4).
-permittedMove( 5 , 3 , 4).
-permittedMove( 6 , 2 , 5).
-permittedMove( 6 , 3 , 5).
-permittedMove( 7 , 2 , 6).
-permittedMove( 7 , 3 , 6).
-permittedMove( 8 , 2 , 7).
-permittedMove( 8 , 3 , 7).
+permittedMove( 1 , 0 , 2 , 0).
+permittedMove( 1 , 0 ,3 , 0).
+permittedMove( 2 , 0 ,2 , 1).
+permittedMove( 2 , 0 ,3 , 1).
+permittedMove( 3 , 0 ,2 , 2).
+permittedMove( 3 , 0 ,3 , 2).
+permittedMove( 4 , 0 ,2 , 3).
+permittedMove( 4 , 0 ,3 , 3).
+permittedMove( 5 , 0 ,2 , 4).
+permittedMove( 5 , 0 ,3 , 4).
+permittedMove( 6 , 0 ,2 , 5).
+permittedMove( 6 , 0 ,3 , 5).
+permittedMove( 7 , 0 ,2 , 6).
+permittedMove( 7 , 0 ,3 , 6).
+permittedMove( 8 , 0 ,2 , 7).
+permittedMove( 8 , 0 ,3 , 7).
 
-permittedMove( 10, 2 , 0).
-permittedMove( 10 , 2 , 2).
+permittedMove( 10, 0 , 2 , 0).
+permittedMove( 10, 0 ,2 , 2).
 
-permittedMove( 15, 2 , 5).
-permittedMove( 15 , 2 , 7).
+permittedMove( 15, 0 ,2 , 5).
+permittedMove( 15 , 0 ,2 , 7).
 
 
 	% posizioni sulla scacchiera %
